@@ -26,9 +26,19 @@
     -->
     <title>React App</title>
   </head>
-  <body>
+  <body
+    style="
+      --kt-toolbar-height: 55px;
+      --kt-toolbar-height-tablet-and-mobile: 55px;
+    "
+    class="
+      header-fixed header-tablet-and-mobile-fixed
+      toolbar-enabled toolbar-fixed toolbar-tablet-and-mobile-fixed
+      aside-enabled aside-fixed
+    "
+  >
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root" class="d-flex flex-column flex-root"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

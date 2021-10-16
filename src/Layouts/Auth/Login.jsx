@@ -1,27 +1,33 @@
 import React, { useState } from "react";
+import * as action from "../../redux/actionTypes";
 import { useFormik } from "formik";
-import * as Yup from 'yup';
-import clsx from 'clsx';
+import { useSelector, useDispatch } from "react-redux";
+import * as Yup from "yup";
+import clsx from "clsx";
 import { toAbsoluteUrl } from "../../Helpers/AssetHelper";
+import { set } from "harmony-reflect";
+import { auth } from "../../redux/actions";
 const initialValues = { email: "", password: "" };
 const loginSchema = Yup.object().shape({
   email: Yup.string()
-    .email('Veuillez saisir un email valide')
-    .required('Veuillez saisir votre email'),
-  password: Yup.string()
-    .required('Veuillez saisir votre mot de passe'),
-})
+    .email("Veuillez saisir un email valide")
+    .required("Veuillez saisir votre email"),
+  password: Yup.string().required("Veuillez saisir votre mot de passe"),
+});
 export function Login() {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const error = useSelector((state) => state.error);
+  const loading = useSelector((state) => state.loading);
+  console.log(error);
+
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
-      setLoading(true);
-      /*axios */
-     
+      dispatch(auth(values.email, values.password));
     },
   });
+
   return (
     <div
       className="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed"
@@ -52,10 +58,10 @@ export function Login() {
             </div>
             {/* begin::Heading */}
 
-            {formik.status ? (
+            {error ? (
               <div className="mb-lg-15 alert alert-danger">
                 <div className="alert-text font-weight-bold">
-                  {formik.status}
+                  {error.message}
                 </div>
               </div>
             ) : null}
@@ -139,7 +145,7 @@ export function Login() {
                 type="submit"
                 id="kt_sign_in_submit"
                 className="btn btn-lg btn-primary w-100 mb-5"
-                disabled={formik.isSubmitting || !formik.isValid}
+                disabled={!formik.isValid}
               >
                 {!loading && (
                   <span className="indicator-label">S'authentifier</span>
