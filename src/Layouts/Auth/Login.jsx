@@ -16,9 +16,8 @@ const loginSchema = Yup.object().shape({
 });
 export function Login() {
   const dispatch = useDispatch();
-  const error = useSelector((state) => state.error);
-  const loading = useSelector((state) => state.loading);
-  console.log(error);
+  const error = useSelector((state) => state.auth.error);
+  const loading = useSelector((state) => state.auth.loading);
 
   const formik = useFormik({
     initialValues,

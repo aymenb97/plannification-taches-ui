@@ -13,11 +13,27 @@ export const authStart = () => {
     type: AUTH_START,
   };
 };
-export const authSuccess = (idToken, roleId) => {
+export const authCheck = () => {
+  const token = localStorage.getItem("tokenId");
+  const role = localStorage.getItem("roleId");
+  if (token && role) {
+    return {
+      type: AUTH_SUCCESS,
+      idToken: token,
+      roleId: role,
+    };
+  } else {
+    return {
+      type: AUTH_INITIATE_LOGOUT,
+    };
+  }
+};
+export const authSuccess = (idToken, roleId, expiration) => {
   return {
     type: AUTH_SUCCESS,
     idToken: idToken,
     roleId: roleId,
+    expiration: expiration,
   };
 };
 export const authFail = (error) => {

@@ -1,8 +1,9 @@
 import React from "react";
 import { HeaderWrapper } from "../../Components/header/HeaderWrapper";
 import { Toolbar } from "../../Components/toolbar/Toolbar";
-
+import { useSelector } from "react-redux";
 export function DashboardLayout(props) {
+  const pageTitle = useSelector((state) => state.post.pageTitle);
   return (
     <>
       <div className="page d-flex flex-row flex-column-fluid">
@@ -46,7 +47,7 @@ export function DashboardLayout(props) {
             className="content d-flex flex-column flex-column-fluid"
           >
             <div className="toolbar">
-              <Toolbar title={props.title} />
+              <Toolbar title={pageTitle} />
             </div>
             <div className="post d-flex flex-column-fluid">
               <div className="container">{props.content}</div>

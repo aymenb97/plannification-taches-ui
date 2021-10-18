@@ -5,10 +5,6 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import store from "./store";
 
-import { createStore, applyMiddleware } from "redux";
-import authReducer from "./redux/reducers/auth";
-import createSagaMiddleware from "redux-saga";
-
 //sagaMiddleware.run(logoutSaga);
 ReactDOM.render(
   <React.StrictMode>

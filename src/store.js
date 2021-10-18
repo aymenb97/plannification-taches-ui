@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from "redux";
-import authReducer from "./redux/reducers/auth";
+import { rootReducer } from "./redux/reducers";
 import createSagaMiddleware from "redux-saga";
 import { watchAuth } from "./redux/sagas";
 import { composeWithDevTools } from "redux-devtools-extension";
@@ -10,14 +10,6 @@ const composedEnhancer = compose(
   applyMiddleware(sagaMiddleware),
   composeWithDevTools()
 );
-let preLoadedState =
-  tokenId && roleId
-    ? {
-        tokenId: tokenId,
-        roleId: roleId,
-      }
-    : undefined;
-
-const store = createStore(authReducer, composedEnhancer);
+const store = createStore(rootReducer, composedEnhancer);
 sagaMiddleware.run(watchAuth);
 export default store;

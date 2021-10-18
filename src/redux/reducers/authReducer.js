@@ -8,6 +8,7 @@ const initialState = {
   tokenId: null,
   roleId: null,
   error: null,
+  expiration: null,
   loading: false,
 };
 const authReducer = (state = initialState, action) => {
@@ -24,6 +25,7 @@ const authReducer = (state = initialState, action) => {
         ...state,
         tokenId: action.idToken,
         roleId: action.roleId,
+        expiration: action.expiration,
         loading: false,
         error: null,
       };
