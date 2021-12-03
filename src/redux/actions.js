@@ -1,50 +1,58 @@
-import instance from "../axios";
 import {
-  AUTH_LOGOUT,
-  AUTH_START,
+  AUTH_CHECK,
   AUTH_FAIL,
   AUTH_SUCCESS,
   AUTH_INITIATE_LOGOUT,
   AUTH_TIMEOUT,
   AUTH_USER,
+  CHECK_AUTH_TIMEOUT,
 } from "./actionTypes";
 export const authStart = () => {
   return {
-    type: AUTH_START,
+    type: AUTH_CHECK,
   };
 };
-export const authCheck = () => {
-  const token = localStorage.getItem("tokenId");
-  const role = localStorage.getItem("roleId");
-  if (token && role) {
-    return {
-      type: AUTH_SUCCESS,
-      idToken: token,
-      roleId: role,
-    };
+export const authCheck = (token, roles, surname, name, expiration) => {
+  console.log(expiration);
+  if (token && roles.length !== 0) {
+    if (new Date() < new Date(expiration)) {
+      return {
+        type: CHECK_AUTH_TIMEOUT,
+        idToken: token,
+        roles: roles,
+        name: name,
+        surname: surname,
+        expiration: new Date(expiration),
+      };
+    } else {
+      return {
+        type: AUTH_INITIATE_LOGOUT,
+        loading: false,
+      };
+    }
   } else {
     return {
       type: AUTH_INITIATE_LOGOUT,
+      loading: false,
     };
   }
 };
-export const authSuccess = (idToken, roleId, expiration) => {
+export const authSuccess = (idTokenP, rolesP, surnameP, nameP, expirationP) => {
   return {
-    type: AUTH_SUCCESS,
-    idToken: idToken,
-    roleId: roleId,
-    expiration: expiration,
+    type: CHECK_AUTH_TIMEOUT,
+    idToken: idTokenP,
+    roles: rolesP,
+    name: nameP,
+    surname: surnameP,
+    expiration: expirationP,
   };
 };
+
 export const authFail = (error) => {
   return {
     type: AUTH_FAIL,
     error: error,
-  };
-};
-export const authLogout = () => {
-  return {
-    type: AUTH_INITIATE_LOGOUT,
+    loading: false,
   };
 };
 
@@ -55,9 +63,10 @@ export const auth = (email, password) => {
     password: password,
   };
 };
-export const checkAuthTimeout = (expiration) => {
-  return {
-    expiration: 5,
-    type: AUTH_TIMEOUT,
-  };
-};
+
+// export const checkAuthTimeout = (expiration) => {
+//   return {
+//     expiration: expiration,
+//     type: AUTH_TIMEOUT,
+//   };
+// };

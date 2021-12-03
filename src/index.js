@@ -4,8 +4,9 @@ import { Provider } from "react-redux";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import store from "./store";
+import { injectStore } from "./common/axiosWithAuth";
 
-//sagaMiddleware.run(logoutSaga);
+injectStore(store);
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

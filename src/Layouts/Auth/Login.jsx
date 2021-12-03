@@ -14,7 +14,7 @@ const loginSchema = Yup.object().shape({
     .required("Veuillez saisir votre email"),
   password: Yup.string().required("Veuillez saisir votre mot de passe"),
 });
-export function Login() {
+export default function Login() {
   const dispatch = useDispatch();
   const error = useSelector((state) => state.auth.error);
   const loading = useSelector((state) => state.auth.loading);

@@ -3,10 +3,12 @@ import {
   AUTH_SUCCESS,
   AUTH_FAIL,
   AUTH_LOGOUT,
+  CHECK_AUTH_TIMEOUT,
 } from "../actionTypes";
 const initialState = {
+  isAuth: false,
   tokenId: null,
-  roleId: null,
+  roles: null,
   error: null,
   expiration: null,
   loading: false,
@@ -20,11 +22,14 @@ const authReducer = (state = initialState, action) => {
         loading: true,
       };
     }
-    case AUTH_SUCCESS: {
+    case CHECK_AUTH_TIMEOUT: {
       return {
         ...state,
+        isAuth: action.idToken && action.roles.length !== 0,
         tokenId: action.idToken,
-        roleId: action.roleId,
+        roles: action.roles,
+        surname: action.surname,
+        name: action.name,
         expiration: action.expiration,
         loading: false,
         error: null,
@@ -34,7 +39,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         tokenId: null,
-        roleId: null,
+        roles: null,
         error: action.error,
         loading: false,
       };
@@ -42,8 +47,14 @@ const authReducer = (state = initialState, action) => {
     case AUTH_LOGOUT: {
       return {
         ...state,
-        token: null,
-        time: null,
+        isAuth: false,
+        tokenId: null,
+        roles: null,
+        surname: null,
+        name: null,
+        expiration: null,
+        loading: false,
+        error: null,
       };
     }
     default:

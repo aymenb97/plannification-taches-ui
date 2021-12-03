@@ -1,2 +1,2 @@
-export { auth, checkAuthTimeout } from "./actions";
+export { auth } from "./actions";
 export { setPageTitle } from "./postActions";
