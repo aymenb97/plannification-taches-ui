@@ -1,0 +1,15 @@
+$modal-animation-duration: 0.3s;
+$animation-duration: 0.4s;
+
+.modal-fadeindown {
+  animation: fadeInDown;
+  animation-duration: $modal-animation-duration;
+}
+.modal-fadeoutup {
+  animation: fadeOutUp;
+  animation-duration: $modal-animation-duration;
+}
+.fadein {
+  animation: fadeIn;
+  animation-duration: $animation-duration;
+}
