@@ -4,8 +4,26 @@ import { instanceToken as axios } from "../../../common/axiosWithAuth";
 import { setPageTitle } from "../../../redux";
 import { userCircle } from "./UserCircle";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+import EditUser from "./EditUser";
+import AddUser from "./AddUser";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 export default function ManageUsers(props) {
+  const [loading, setLoading] = useState(true);
+  const MySwal = withReactContent(
+    Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-sm btn-success mx-2 mb-5",
+        cancelButton: "btn btn-sm btn-danger mx-2 mb-5",
+      },
+      buttonsStyling: false,
+      titleStyling: false,
+    })
+  );
   const dispatch = useDispatch();
   const [users, setUsers] = useState([]);
   const [error, setError] = useState();
@@ -15,21 +33,54 @@ export default function ManageUsers(props) {
       .get("/users")
       .then((res) => {
         setUsers(res.data["hydra:member"]);
+        setLoading(false);
       })
 
       .catch((err) => {
         setError(err);
+        setLoading(false);
       });
   }, []);
+  function deleteUser(id, name, surmane) {
+    MySwal.fire({
+      title: `<span class="card-label fw-bolder fs-3 mb-1">Supprimer L'utilisateur ${surmane} ${name}?</span>`,
+      showCancelButton: true,
+      confirmButtonText: "Supprimer",
+      cancelButtonText: `Annuler`,
+      showClass: {
+        popup: "modal-fadeindown",
+      },
+      hideClass: {
+        popup: "modal-fadeoutup",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`/users/${id}`)
+          .then((res) => {
+            const usertemp = [...users];
+
+            usertemp.splice(
+              usertemp.findIndex((el) => {
+                return el.id === id;
+              }),
+              1
+            );
+            setUsers(usertemp);
+          })
+          .catch((err) => {});
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
+  }
 
   return (
-    <div className={`card `}>
+    <div className="card fadein">
       {/* begin::Header */}
       <div className="card-header border-0 pt-5">
         <h3 className="card-title align-items-start flex-column">
-          <span className="card-label fw-bolder fs-3 mb-1">
-            Members Statistics
-          </span>
+          <span className="card-label fw-bolder fs-3 mb-1">Utilisateurs</span>
           <span className="text-muted mt-1 fw-bold fs-7">
             {users.length} Utilisateurs
           </span>
@@ -41,130 +92,112 @@ export default function ManageUsers(props) {
           data-bs-trigger="hover"
           title="Click to add a user"
         >
-          <a
-            href="#"
-            className="btn btn-sm btn-light-primary"
+          <Link
+            exact
+            to="/gerer-utilisateurs/ajouter-utilisateur"
+
             // data-bs-toggle='modal'
             // data-bs-target='#kt_modal_invite_friends'
           >
-            <span FontAwesomeIcon={faPlus} className="svg-icon-3" />
-            Ajouter Utilisateur
-          </a>
+            <button className="btn btn-sm btn-light-primary">
+              <span FontAwesomeIcon={faPlus} className="svg-icon-3" />
+              Ajouter Utilisateur
+            </button>
+          </Link>
         </div>
       </div>
       {/* end::Header */}
       {/* begin::Body */}
-      <div className="card-body py-3">
+      <div className="card-body d-flex justify-content-center ">
         {/* begin::Table container */}
-        <div className="table-responsive">
-          {/* begin::Table */}
-          <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
-            {/* begin::Table head */}
-            <thead>
-              <tr className="fw-bolder text-muted">
-                <th className="w-25px">
-                  <div className="form-check form-check-sm form-check-custom form-check-solid">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value="1"
-                      data-kt-check="true"
-                      data-kt-check-target=".widget-9-check"
-                    />
-                  </div>
-                </th>
-                <th className="min-w-150px">Nom</th>
-                <th className="min-w-140px">Email</th>
-                <th className="min-w-120px">Téléphone</th>
-                <th className="min-w-100px text-end">Actions</th>
-              </tr>
-            </thead>
-            {/* end::Table head */}
-            {/* begin::Table body */}
-            <tbody>
-              {users.map((user) => {
-                return (
-                  <tr>
-                    <td>
-                      <div className="form-check form-check-sm form-check-custom form-check-solid">
-                        <input
-                          className="form-check-input widget-9-check"
-                          type="checkbox"
-                          value="1"
-                        />
-                      </div>
-                    </td>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <div className="symbol symbol-45px me-5"></div>
-                        <div className="d-flex justify-content-start flex-column">
-                          <a
-                            href="#"
-                            className="text-dark fw-bolder text-hover-primary fs-6"
+
+        {/* begin::Table */}
+        {loading ? (
+          <div class="spinner-border  text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        ) : (
+          <div className="table-responsive m-1 w-100 fadein">
+            <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+              {/* begin::Table head */}
+              <thead>
+                <tr className="fw-bolder text-muted">
+                  <th className="min-w-150px">Utilisateur</th>
+                  <th className="min-w-140px">Email</th>
+                  <th className="min-w-120px">Téléphone</th>
+                  <th className="min-w-100px text-end">Actions</th>
+                </tr>
+              </thead>
+              {/* end::Table head */}
+              {/* begin::Table body */}
+              <tbody>
+                {users.map((user) => {
+                  return (
+                    <tr>
+                      <td>
+                        <div className="d-flex align-items-center">
+                          <div className="symbol symbol-45px"></div>
+                          <div className="d-flex justify-content-start flex-column">
+                            <span className="ext-dark fw-bolder fs-6">
+                              {" "}
+                              {user.name + " " + user.surname}
+                            </span>
+
+                            <span className="text-muted fw-bold text-muted d-block fs-7">
+                              {user.roles.join(" ")}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="text-muted fw-bold text-muted d-block fs-7">
+                          {user.email}
+                        </span>
+                      </td>
+                      <td className="text-end">
+                        <div className="d-flex flex-column w-100 me-2">
+                          <div className="d-flex flex-stack mb-2">
+                            <span className="text-muted me-2 fs-7 fw-bold">
+                              {user.phone}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="d-flex justify-content-end flex-shrink-0">
+                          <Link
+                            to={`/gerer-utilisateurs/modifier-utilisateur/${user.id}`}
                           >
-                            {user.name + " " + user.surname}
-                          </a>
-                          <span className="text-muted fw-bold text-muted d-block fs-7">
-                            {user.roles.join(" ")}
-                          </span>
+                            <div className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
+                              <FontAwesomeIcon icon={faEdit} />
+                            </div>
+                          </Link>
+                          <div
+                            onClick={(e, id) =>
+                              deleteUser(user.id, user.name, user.surname)
+                            }
+                            className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                          >
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              className="text-danger"
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span className="text-muted fw-bold text-muted d-block fs-7">
-                        {user.email}
-                      </span>
-                    </td>
-                    <td className="text-end">
-                      <div className="d-flex flex-column w-100 me-2">
-                        <div className="d-flex flex-stack mb-2">
-                          <span className="text-muted me-2 fs-7 fw-bold">
-                            {user.phone}
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="d-flex justify-content-end flex-shrink-0">
-                        <a
-                          href="#"
-                          className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                        >
-                          <span
-                            path="/media/icons/duotune/general/gen019.svg"
-                            className="svg-icon-3"
-                          />
-                        </a>
-                        <a
-                          href="#"
-                          className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                        >
-                          <span
-                            path="/media/icons/duotune/art/art005.svg"
-                            className="svg-icon-3"
-                          />
-                        </a>
-                        <a
-                          href="#"
-                          className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
-                        >
-                          <span
-                            path="/media/icons/duotune/general/gen027.svg"
-                            className="svg-icon-3"
-                          />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-            {/* end::Table body */}
-          </table>
-          {/* end::Table */}
-        </div>
-        {/* end::Table container */}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              {/* end::Table body */}
+            </table>
+          </div>
+        )}
+
+        {/* end::Table */}
       </div>
+      {/* end::Table container */}
+
       {/* begin::Body */}
     </div>
   );

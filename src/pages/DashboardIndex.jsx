@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { DashboardLayout } from "../Layouts/Dashboard/DashboardLayout";
 import { AsideMenuItem } from "../Components/aside/AsideElement";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCog ,FaUserClock } from "@fortawesome/free-solid-svg-icons";
+import { faUserCog } from "@fortawesome/free-solid-svg-icons";
+import AddUser from "./Admin/Components/AddUser";
+import EditUser from "./Admin/Components/EditUser";
+
 import { useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
@@ -81,6 +83,17 @@ export default function DashboardIndex(props) {
             exact
             path="/gerer-suivi-projet"
             component={ManageProjectMonitoring}
+          />
+          <Route
+            exact
+            path="/gerer-utilisateurs/modifier-utilisateur/:id"
+            component={EditUser}
+          />
+
+          <Route
+            exact
+            path="/gerer-utilisateurs/ajouter-utilisateur"
+            component={AddUser}
           />
         </Switch>
       }
