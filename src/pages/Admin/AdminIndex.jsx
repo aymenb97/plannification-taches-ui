@@ -26,6 +26,11 @@ export function AdminIndex(props) {
             icon={faUserCog}
             link="gerer-suivi-projet"
           ></AsideMenuItem>
+           <AsideMenuItem
+                title="Gérer Taches"
+                icon={faUserCog}
+                link="gerer-taches"
+              ></AsideMenuItem>
         </>
       }
       content={

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { DashboardLayout } from "../Layouts/Dashboard/DashboardLayout";
 import { AsideMenuItem } from "../Components/aside/AsideElement";
-import { faUserCog } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCog ,FaUserClock } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
@@ -40,6 +41,11 @@ export default function DashboardIndex(props) {
                 title="Gérer Projets"
                 icon={faUserCog}
                 link="gerer-suivi-projet"
+              ></AsideMenuItem>
+               <AsideMenuItem
+                title="Gérer Taches"
+                icon={FaUserClock}
+                link="gerer-taches"
               ></AsideMenuItem>
             </>
           ) : null}
