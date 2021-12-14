@@ -1,7 +1,7 @@
 import "./assets/sass/style.scss";
 import "./assets/sass/style.react.scss";
 
-import Login from "./Layouts/Auth/Login";
+import Login from "./pages/Auth/Login";
 import DashboardIndex from "./pages/DashboardIndex";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";

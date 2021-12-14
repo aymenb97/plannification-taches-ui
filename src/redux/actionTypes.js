@@ -6,5 +6,6 @@ export const AUTH_INITIATE_LOGOUT = "AUTH_INITIATE_LOGOUT";
 export const AUTH_TIMEOUT = "AUTH_TIMEOUT";
 export const AUTH_USER = "AUTH_USER";
 export const SET_PAGE_TITLE = "SET_PAGE_TITLE";
+export const SET_NAV_LINK = "SET_NAV_LINK";
 export const AUTH_CHECK = "AUTH_CHECK";
 export const CHECK_AUTH_TIMEOUT = "CHECK_AUTH_TIMEOUT";

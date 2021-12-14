@@ -1,24 +1,96 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { toAbsoluteUrl } from "../../Helpers/AssetHelper";
+import { Link } from "react-router-dom";
+import { UserCircle } from "../UserCircle";
+import { useDispatch, useSelector } from "react-redux";
+import { authLogout } from "../../redux/actions";
+import clsx from "clsx";
 export function Header() {
+  const ref = useRef();
+  const [showMenu, setShowMenu] = useState(false);
+  const dispatch = useDispatch();
+  const name = useSelector((state) => state.auth.name);
+  const surname = useSelector((state) => state.auth.surname);
+  const email = useSelector((state) => state.auth.email);
+  useEffect(() => {
+    const checkIfClickedOutside = (e) => {
+      if (showMenu && ref.current && !ref.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", checkIfClickedOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", checkIfClickedOutside);
+    };
+  }, [showMenu]);
   return (
-    <div
-      className="header-menu align-items-stretch"
-      data-kt-drawer="true"
-      data-kt-drawer-name="header-menu"
-      data-kt-drawer-activate="{default: true, lg: false}"
-      data-kt-drawer-overlay="true"
-      data-kt-drawer-width="{default:'200px', '300px': '250px'}"
-      data-kt-drawer-direction="end"
-      data-kt-drawer-toggle="#kt_header_menu_mobile_toggle"
-      data-kt-swapper="true"
-      data-kt-swapper-mode="prepend"
-      data-kt-swapper-parent="{default: '#kt_body', lg: '#kt_header_nav'}"
-    >
-      <div
-        className="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch"
-        id="#kt_header_menu"
-        data-kt-menu="true"
-      ></div>
+    <div ref={ref} className="d-flex align-items-stretch flex-shrink-0">
+      <div className="d-flex align-items-center ms-1 ms-lg-3">
+        <div className="d-flex align-items-center ms-1 ms-lg-3">
+          <div
+            onClick={() => {
+              setShowMenu(!showMenu);
+            }}
+            className="cursor-pointer symbol  symbol-md-40px"
+          >
+            <UserCircle name={name + " " + surname} />
+          </div>
+          <div
+            className={clsx(
+              "menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px",
+              showMenu && "show"
+            )}
+            style={{
+              zIndex: "105",
+              position: "fixed",
+              inset: "0px auto auto 0px",
+              margin: "0px",
+              transform: "translate(1214px, 65px)",
+            }}
+            data-popper-placement="bottom-end"
+          >
+            <div className="menu-item px-3">
+              <div className="menu-content d-flex align-items-center px-3">
+                <div className="symbol-50px me-5">
+                  <UserCircle name={name + " " + surname} />
+                </div>
+                <div className="d-flex flex-column">
+                  <div className="fw-bolder d-flex align-items-center fs-5">
+                    {name + " " + surname}
+                  </div>
+                  <a
+                    href={"mailto:" + email}
+                    className="fw-bold text-muted text-hover-primary fs-7"
+                  >
+                    {email}
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="separator my-2"></div>
+            <div className="menu-item px-5">
+              <Link to="/mon-profil">
+                <span className="menu-link px-5">Mon Profil</span>
+              </Link>
+            </div>
+            <div className="menu-item px-5">
+              <span className="menu-link px-5">Messages</span>
+            </div>
+            <div className="menu-item px-5">
+              <span
+                onClick={() => {
+                  dispatch(authLogout());
+                }}
+                className="menu-link px-5"
+              >
+                Se Déconnecter
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

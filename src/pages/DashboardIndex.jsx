@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { DashboardLayout } from "../Layouts/Dashboard/DashboardLayout";
 import { AsideMenuItem } from "../Components/aside/AsideElement";
 import { faUserCog } from "@fortawesome/free-solid-svg-icons";
-import AddUser from "./Admin/Components/AddUser";
-import EditUser from "./Admin/Components/EditUser";
+import AddUser from "./Admin/sections/AddUser";
+import EditUser from "./Admin/sections/EditUser";
+import Profile from "./Common/Profile";
 import { useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
@@ -11,8 +12,8 @@ import {
   useRouteMatch,
   Switch,
 } from "react-router-dom";
-import ManageUsers from "./Admin/Components/ManageUsers";
-import ManageProjectMonitoring from "./Admin/Components/ManageProjectMonitoring";
+import ManageUsers from "./Admin/sections/ManageUsers";
+import ManageProjectMonitoring from "./Admin/sections/ManageProjectMonitoring";
 
 export default function DashboardIndex(props) {
   const roles = useSelector((state) => state.auth.roles);
@@ -89,6 +90,7 @@ export default function DashboardIndex(props) {
             path="/gerer-utilisateurs/ajouter-utilisateur"
             component={AddUser}
           />
+          <Route exact path="/mon-profil" component={Profile} />
         </Switch>
       }
     ></DashboardLayout>

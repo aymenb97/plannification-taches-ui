@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { setPageTitle } from "../../redux";
+import { setPageTitle } from "../../../redux/navActions";
 export function ManageProject(props) {
   const dispatch = useDispatch();
   dispatch(setPageTitle("Gérer Projets"));

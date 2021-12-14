@@ -6,12 +6,14 @@ import {
   CHECK_AUTH_TIMEOUT,
 } from "../actionTypes";
 const initialState = {
+  id: null,
   isAuth: false,
   tokenId: null,
   roles: null,
   error: null,
   expiration: null,
   loading: false,
+  email: null,
 };
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -25,6 +27,7 @@ const authReducer = (state = initialState, action) => {
     case CHECK_AUTH_TIMEOUT: {
       return {
         ...state,
+        id: action.id,
         isAuth: action.idToken && action.roles.length !== 0,
         tokenId: action.idToken,
         roles: action.roles,
@@ -32,6 +35,7 @@ const authReducer = (state = initialState, action) => {
         name: action.name,
         expiration: action.expiration,
         loading: false,
+        email: action.email,
         error: null,
       };
     }
@@ -48,8 +52,10 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         isAuth: false,
+        id: null,
         tokenId: null,
         roles: null,
+        email: null,
         surname: null,
         name: null,
         expiration: null,

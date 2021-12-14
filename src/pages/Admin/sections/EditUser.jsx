@@ -1,6 +1,8 @@
 import { Formik, Form, Field, useFormik } from "formik";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { setNavLink } from "../../../redux/navActions";
 import { instanceToken as axios } from "../../../common/axiosWithAuth";
 export default function EditUser(props) {
   const digitsRegex = (value) => /^\+?(\d| )+$/.test(value);
@@ -8,7 +10,13 @@ export default function EditUser(props) {
   const [initialValues, setInitialValues] = useState({});
   const [loading, setLoading] = useState(true);
   const [changePassword, setChangePassword] = useState(false);
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setNavLink("Utilisateurs", "gerer-utilisateurs"));
+    return () => {
+      dispatch(setNavLink("", ""));
+    };
+  }, []);
   const onSubmit = (values) => setResult(values);
   const validationSchema = Yup.lazy((values) => {
     if (changePassword) {
