@@ -76,7 +76,9 @@ export function Header() {
               </Link>
             </div>
             <div className="menu-item px-5">
-              <span className="menu-link px-5">Messages</span>
+              <Link to="/chat">
+                <span className="menu-link px-5">Messages</span>
+              </Link>
             </div>
             <div className="menu-item px-5">
               <span

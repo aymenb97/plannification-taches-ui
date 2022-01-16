@@ -2,8 +2,11 @@ import { Formik, Form, Field, useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { setPageTitle } from "../../redux/navActions";
 import { instanceToken as axios } from "../../common/axiosWithAuth";
 export default function Profile(props) {
+  const dispatch = useDispatch();
   const digitsRegex = (value) => /^\+?(\d| )+$/.test(value);
   const [result, setResult] = useState({});
   const [initialValues, setInitialValues] = useState({});
@@ -80,6 +83,8 @@ export default function Profile(props) {
   } = formik;
 
   useEffect(() => {
+    dispatch(setPageTitle("Mon Profil"));
+
     validateForm();
     axios
       .get(`/users/${id}`)

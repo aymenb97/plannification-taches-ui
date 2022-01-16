@@ -26,3 +26,7 @@ $animation-duration: 0.4s;
 .text-user-circle {
   user-select: none;
 }
+
+.hoverable-element:hover {
+  background-color: #f5f8fa;
+}

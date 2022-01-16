@@ -4,17 +4,15 @@ export function UserCircle(props) {
 
   return (
     <div
-      style={{ backgroundColor: `hsl(${hue}, 50%, 86%)` }}
+      style={{ backgroundColor: `hsl(${hue}, 50%, 90%)` }}
       className="user-circle d-flex align-items-center justify-content-center"
     >
       <span
-        style={{ color: `hsl(${hue}, 80%, 20%)` }}
+        style={{ color: `hsl(${hue}, 80%, 30%)` }}
         className="text-user-circle"
       >
-        {props.name
-          .split(" ")
-          .map((item) => item[0].toUpperCase())
-          .join("")}
+        {props.name.split(" ")[0][0].toUpperCase() +
+          props.name.split(" ")[1][0].toUpperCase()}
       </span>
     </div>
   );

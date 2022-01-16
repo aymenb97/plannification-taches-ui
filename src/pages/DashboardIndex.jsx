@@ -5,6 +5,7 @@ import { faUserCog } from "@fortawesome/free-solid-svg-icons";
 import AddUser from "./Admin/sections/AddUser";
 import EditUser from "./Admin/sections/EditUser";
 import Profile from "./Common/Profile";
+import Chat from "./Common/Messages/Chat";
 import { useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
@@ -91,6 +92,7 @@ export default function DashboardIndex(props) {
             component={AddUser}
           />
           <Route exact path="/mon-profil" component={Profile} />
+          <Route path="/chat" component={Chat} />
         </Switch>
       }
     ></DashboardLayout>
