@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setPageTitle } from "../../../redux";
+import { setPageTitle } from "../../../redux/navActions";
 export default function ManageProjectMonitoring(props) {
   const dispatch = useDispatch();
   dispatch(setPageTitle("Gérer Suivi De Projets"));

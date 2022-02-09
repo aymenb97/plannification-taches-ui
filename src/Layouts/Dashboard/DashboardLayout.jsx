@@ -3,7 +3,7 @@ import { HeaderWrapper } from "../../Components/header/HeaderWrapper";
 import { Toolbar } from "../../Components/toolbar/Toolbar";
 import { useSelector } from "react-redux";
 export function DashboardLayout(props) {
-  const pageTitle = useSelector((state) => state.post.pageTitle);
+  const pageTitle = useSelector((state) => state.nav.pageTitle);
   return (
     <>
       <div className="page d-flex flex-row flex-column-fluid">

@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import authReducer from "./authReducer";
-import postReducer from "./postReducer";
+import navReducer from "./navReducer";
 export const rootReducer = combineReducers({
   auth: authReducer,
-  post: postReducer,
+  nav: navReducer,
 });

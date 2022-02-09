@@ -13,20 +13,22 @@ export function HeaderWrapper() {
       )}
     >
       <div
-        className={clsx("d-flex align-items-stretch justify-content-between")}
+        className={clsx(
+          "container-fluid d-flex align-items-stretch justify-content-between"
+        )}
       >
         {/* begin::Logo */}
-        {true && (
+        {
           <div className="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
             <div to="/dashboard" className="d-lg-none">
               <img
-                alt="Logo"
+                alt="Logo goes here"
                 src={toAbsoluteUrl("/media/logos/logo-2.svg")}
                 className="h-30px"
               />
             </div>
           </div>
-        )}
+        }
         {/* end::Logo */}
 
         {true && (
@@ -45,9 +47,10 @@ export function HeaderWrapper() {
         <div className="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
           {/* begin::Navbar */}
           {true && (
-            <div className="d-flex align-items-stretch" id="kt_header_nav">
-              <Header />
-            </div>
+            <div
+              className="d-flex align-items-stretch"
+              id="kt_header_nav"
+            ></div>
           )}
 
           {true && (
@@ -57,7 +60,7 @@ export function HeaderWrapper() {
           )}
 
           <div className="d-flex align-items-stretch flex-shrink-0">
-            {/*<Topbar />*/}
+            <Header />
           </div>
         </div>
         {/* end::Wrapper */}

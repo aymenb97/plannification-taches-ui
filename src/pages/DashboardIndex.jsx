@@ -8,6 +8,11 @@ import AddTache from "./Manager/AddTache";
 import EditTache from "./Manager/EditTache";
 import AddModule from "./Manager/AddModule";
 import EditModule from "./Manager/EditModule";
+import { faUserCog } from "@fortawesome/free-solid-svg-icons";
+import AddUser from "./Admin/sections/AddUser";
+import EditUser from "./Admin/sections/EditUser";
+import Profile from "./Common/Profile";
+import Chat from "./Common/Messages/Chat";
 import { useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
@@ -20,6 +25,8 @@ import ManageTaches from "./Manager/ManageTaches";
 
 import ManageModules from "./Manager/ManageModules";
 import ManageProjectMonitoring from "./Admin/Components/ManageProjectMonitoring";
+import ManageUsers from "./Admin/sections/ManageUsers";
+import ManageProjectMonitoring from "./Admin/sections/ManageProjectMonitoring";
 
 export default function DashboardIndex(props) {
   const roles = useSelector((state) => state.auth.roles);
@@ -102,6 +109,13 @@ export default function DashboardIndex(props) {
 
           <Route exact path="/gerer-modules/ajouter-module"component={AddModule}/>
           <Route exact path="/gerer-modules/modifier-module/:id" component={EditModule}/>
+          <Route
+            exact
+            path="/gerer-utilisateurs/ajouter-utilisateur"
+            component={AddUser}
+          />
+          <Route exact path="/mon-profil" component={Profile} />
+          <Route path="/chat" component={Chat} />
         </Switch>
       }
     ></DashboardLayout>

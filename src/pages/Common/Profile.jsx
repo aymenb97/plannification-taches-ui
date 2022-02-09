@@ -1,14 +1,18 @@
 import { Formik, Form, Field, useFormik } from "formik";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
-import { instanceToken as axios } from "../../../common/axiosWithAuth";
-export default function EditUser(props) {
+import { useDispatch } from "react-redux";
+import { setPageTitle } from "../../redux/navActions";
+import { instanceToken as axios } from "../../common/axiosWithAuth";
+export default function Profile(props) {
+  const dispatch = useDispatch();
   const digitsRegex = (value) => /^\+?(\d| )+$/.test(value);
   const [result, setResult] = useState({});
   const [initialValues, setInitialValues] = useState({});
   const [loading, setLoading] = useState(true);
   const [changePassword, setChangePassword] = useState(false);
-
+  const id = useSelector((state) => state.auth.id);
   const onSubmit = (values) => setResult(values);
   const validationSchema = Yup.lazy((values) => {
     if (changePassword) {
@@ -28,7 +32,7 @@ export default function EditUser(props) {
             digitsRegex
           )
           .min(8, "Saisir un numéro de téléphone valide"),
-        roles: Yup.array().min(1, "Sélectionner au moins un role"),
+
         password: Yup.string()
           .required("Saisir un mot de passe")
           .min(8, "Le mot de passe doit contenir au moins 8 caractères"),
@@ -57,7 +61,6 @@ export default function EditUser(props) {
             digitsRegex
           )
           .min(8, "Saisir un numéro de téléphone valide"),
-        roles: Yup.array().min(1, "Sélectionner au moins un role"),
       });
     }
   });
@@ -80,9 +83,11 @@ export default function EditUser(props) {
   } = formik;
 
   useEffect(() => {
+    dispatch(setPageTitle("Mon Profil"));
+
     validateForm();
     axios
-      .get(`/users/${props.match.params.id}`)
+      .get(`/users/${id}`)
       .then((res) => {
         setInitialValues({
           email: res.data.email,
@@ -111,7 +116,7 @@ export default function EditUser(props) {
         <>
           <div className="card-header border-0 cursor-pointer fadein">
             <div className="card-title m-0">
-              <h3 className="fw-bolder m-0">{`Modifier information pour ${initialValues.name} ${initialValues.surname}`}</h3>
+              <h3 className="fw-bolder m-0">Mes Informations</h3>
             </div>
           </div>
           <div id="kt_account_profile_details" className="collapse show fadein">
@@ -121,7 +126,7 @@ export default function EditUser(props) {
               onSubmit={(values, { setSubmitting }) => {
                 setSubmitting(true);
                 axios
-                  .put(`/users/${props.match.params.id}`, values)
+                  .put(`/users/${id}`, values)
                   .then((res) => {
                     console.log(res.data);
                     setSubmitting(false);
@@ -324,51 +329,6 @@ export default function EditUser(props) {
                         </>
                       )}
                     </div>
-                    <div className="row mb-6">
-                      <label className="col-lg-4 col-form-label required fw-bold fs-6">
-                        Roles
-                      </label>
-                      <div className="col-lg-8 fv-row">
-                        <div className="d-flex align-items-center mt-3">
-                          <label className="form-check form-check-inline form-check-solid me-5">
-                            <Field
-                              name="roles"
-                              value="ROLE_ADMIN"
-                              type="checkbox"
-                              className="form-check-input"
-                            />
-                            <span className="fw-bold ps-2 fs-6">
-                              Administrateur
-                            </span>
-                          </label>
-                          <label className="form-check form-check-inline form-check-solid me-5">
-                            <Field
-                              name="roles"
-                              value="ROLE_MEMBER"
-                              type="checkbox"
-                              className="form-check-input"
-                            />
-                            <span className="fw-bold ps-2 fs-6">
-                              Membre Projet
-                            </span>
-                          </label>
-                          <label className="form-check form-check-inline form-check-solid me-5">
-                            <Field
-                              name="roles"
-                              value="ROLE_MANAGER"
-                              type="checkbox"
-                              className="form-check-input"
-                            />
-                            <span className="fw-bold ps-2 fs-6">
-                              Chef De Projet
-                            </span>
-                          </label>
-                        </div>
-                        {errors.roles && touched.roles ? (
-                          <div className="text-danger mt-4">{errors.roles}</div>
-                        ) : null}
-                      </div>
-                    </div>
 
                     <div className="card-footer d-flex justify-content-end py-6 px-9">
                       <button
@@ -376,7 +336,7 @@ export default function EditUser(props) {
                         disabled={isSubmitting}
                         className="btn btn-primary"
                       >
-                        Modifier
+                        Modifier mes Informations
                       </button>
                     </div>
                   </div>

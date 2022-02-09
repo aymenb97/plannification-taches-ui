@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useStore } from "react-redux";
 import { instanceToken as axios } from "../../../common/axiosWithAuth";
-import { setPageTitle } from "../../../redux";
-import { userCircle } from "./UserCircle";
+import { setPageTitle } from "../../../redux/navActions";
+import { UserCircle } from "../../../Components/UserCircle";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import EditUser from "./EditUser";
@@ -122,6 +122,7 @@ export default function ManageUsers(props) {
               {/* begin::Table head */}
               <thead>
                 <tr className="fw-bolder text-muted">
+                  <th></th>
                   <th className="min-w-150px">Utilisateur</th>
                   <th className="min-w-140px">Email</th>
                   <th className="min-w-120px">Téléphone</th>
@@ -134,6 +135,14 @@ export default function ManageUsers(props) {
                 {users.map((user) => {
                   return (
                     <tr>
+                      <td>
+                        <div>
+                          <UserCircle
+                            className="d-flex align-items-center"
+                            name={user.name + " " + user.surname}
+                          />
+                        </div>
+                      </td>
                       <td>
                         <div className="d-flex align-items-center">
                           <div className="symbol symbol-45px"></div>
