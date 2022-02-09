@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { DashboardLayout } from "../Layouts/Dashboard/DashboardLayout";
 import { AsideMenuItem } from "../Components/aside/AsideElement";
-import { faUserCog } from "@fortawesome/free-solid-svg-icons";
+import { faUserCog ,faThList,faListOl,faCubes } from "@fortawesome/free-solid-svg-icons";
 import AddUser from "./Admin/Components/AddUser";
 import EditUser from "./Admin/Components/EditUser";
-
+import AddTache from "./Manager/AddTache";
+import EditTache from "./Manager/EditTache";
+import AddModule from "./Manager/AddModule";
+import EditModule from "./Manager/EditModule";
 import { useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
@@ -13,6 +16,9 @@ import {
   Switch,
 } from "react-router-dom";
 import ManageUsers from "./Admin/Components/ManageUsers";
+import ManageTaches from "./Manager/ManageTaches";
+
+import ManageModules from "./Manager/ManageModules";
 import ManageProjectMonitoring from "./Admin/Components/ManageProjectMonitoring";
 
 export default function DashboardIndex(props) {
@@ -41,13 +47,8 @@ export default function DashboardIndex(props) {
               ></AsideMenuItem>
               <AsideMenuItem
                 title="Gérer Projets"
-                icon={faUserCog}
+                icon={faCubes}
                 link="gerer-suivi-projet"
-              ></AsideMenuItem>
-               <AsideMenuItem
-                title="Gérer Taches"
-                icon={FaUserClock}
-                link="gerer-taches"
               ></AsideMenuItem>
             </>
           ) : null}
@@ -55,8 +56,18 @@ export default function DashboardIndex(props) {
             <>
               <AsideMenuItem
                 title="Gérer Suivi Projets"
-                icon={faUserCog}
+                icon={faListOl}
                 link="gerer-suivi-projet"
+              ></AsideMenuItem>
+              <AsideMenuItem
+                title="Gérer Taches"
+                icon={faThList}
+                link="gerer-taches"
+              ></AsideMenuItem>
+              <AsideMenuItem
+                title="Gérer Modules"
+                icon={faThList}
+                link="gerer-modules"
               ></AsideMenuItem>
             </>
           ) : null}
@@ -79,22 +90,18 @@ export default function DashboardIndex(props) {
       content={
         <Switch>
           <Route exact path="/gerer-utilisateurs" component={ManageUsers} />
-          <Route
-            exact
-            path="/gerer-suivi-projet"
-            component={ManageProjectMonitoring}
-          />
-          <Route
-            exact
-            path="/gerer-utilisateurs/modifier-utilisateur/:id"
-            component={EditUser}
-          />
+          <Route exact path="/gerer-taches" component={ManageTaches} />
+          <Route exact path="/gerer-modules" component={ManageModules} />
+          
+          <Route exact path="/gerer-suivi-projet"component={ManageProjectMonitoring}/>
+          <Route exact path="/gerer-utilisateurs/modifier-utilisateur/:id" component={EditUser}/>
+          <Route exact path="/gerer-utilisateurs/ajouter-utilisateur"component={AddUser}/>
 
-          <Route
-            exact
-            path="/gerer-utilisateurs/ajouter-utilisateur"
-            component={AddUser}
-          />
+          <Route exact path="/gerer-taches/ajouter-tache"component={AddTache}/>
+          <Route exact path="/gerer-taches/modifier-tache/:id" component={EditTache}/>
+
+          <Route exact path="/gerer-modules/ajouter-module"component={AddModule}/>
+          <Route exact path="/gerer-modules/modifier-module/:id" component={EditModule}/>
         </Switch>
       }
     ></DashboardLayout>

@@ -7,15 +7,15 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
-import EditModule from "./EditModule";
-import AddModule from "./AddModule";
+import EditTache from "./EditTache";
+import AddTache from "./AddTache";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Moment from 'moment';
+
 import { faTrash, faEdit ,faOutdent} from "@fortawesome/free-solid-svg-icons";
 
-export default function ManageModules(props) {
+export default function ManageTaches(props) {
   const [loading, setLoading] = useState(true);
   const MySwal = withReactContent(
     Swal.mixin({
@@ -28,16 +28,16 @@ export default function ManageModules(props) {
     })
   );
   const dispatch = useDispatch();
-  const [modules, setModules] = useState([]);
+  const [taches, setTaches] = useState([]);
   const [error, setError] = useState();
   useEffect(() => {
-    dispatch(setPageTitle("Gérer Modules"));
+    dispatch(setPageTitle("Gérer Tâches"));
     axios
-      .get("/modules")
+      .get("/taches")
       .then((res) => {
         console.log("******");
         console.log(res);
-        setModules(res.data["hydra:member"])
+        setTaches(res.data["hydra:member"])
         setLoading(false);
       })
       .catch((err) => {
@@ -49,7 +49,7 @@ export default function ManageModules(props) {
 
 
 
-  function deleteModule(id, titre_tache) {
+  function deleteTache(id, titre_tache) {
     Swal.fire({
       title: 'Êtes-vous sûr?',
       text: "Supprimer ce tâche",
@@ -61,20 +61,20 @@ export default function ManageModules(props) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`/modules/${id}`)
+          .delete(`/taches/${id}`)
           .then((res) => {
-            const moduletemp = [...modules];
+            const tachetemp = [...taches];
 
-            moduletemp.splice(
-                moduletemp.findIndex((el) => {
+            tachetemp.splice(
+                tachetemp.findIndex((el) => {
                 return el.id === id;
               }),
               1
             );
-            setModules(moduletemp);
+            setTaches(tachetemp);
             Swal.fire(
               'Supprimé!',
-              'Votre module a été supprimé.',
+              'Votre tache a été supprimé.',
               'success'
             )
           })
@@ -89,9 +89,9 @@ export default function ManageModules(props) {
       {/* begin::Header */}
       <div className="card-header border-0 pt-5">
         <h3 className="card-title align-items-start flex-column">
-          <span className="card-label fw-bolder fs-3 mb-1">Modules</span>
+          <span className="card-label fw-bolder fs-3 mb-1">Tâches</span>
           <span className="text-muted mt-1 fw-bold fs-7">
-            {modules.length} Modules
+            {taches.length} Tâches
           </span>
         </h3>
         <div
@@ -99,18 +99,18 @@ export default function ManageModules(props) {
           data-bs-toggle="tooltip"
           data-bs-placement="top"
           data-bs-trigger="hover"
-          title="Click to add  module"
+          title="Click to add  tache"
         >
           <Link
             exact
-            to="/gerer-modules/ajouter-module"
+            to="/gerer-taches/ajouter-tache"
 
             // data-bs-toggle='modal'
             // data-bs-target='#kt_modal_invite_friends'
           >
             <button className="btn btn-sm btn-light-primary">
               <span FontAwesomeIcon={faPlus} className="svg-icon-3" />
-              Ajouter Module
+              Ajouter tâche
             </button>
           </Link>
         </div>
@@ -131,16 +131,16 @@ export default function ManageModules(props) {
               {/* begin::Table head */}
               <thead>
                 <tr className="fw-bolder text-muted">
-                  <th className="min-w-150px">Module</th>
-                  <th className="min-w-140px">Date Debut Module</th>
-                  <th className="min-w-120px">Date fin Module</th>
+                  <th className="min-w-150px">Tâche</th>
+                  <th className="min-w-140px">Priorite</th>
+                  <th className="min-w-120px">Etat tâche</th>
                   <th className="min-w-100px text-end">Actions</th>
                 </tr>
               </thead>
               {/* end::Table head */}
               {/* begin::Table body */}
               <tbody>
-                {modules.map((module) => {
+                {taches.map((tache) => {
                   return (
                     <tr>
                       <td>
@@ -149,7 +149,7 @@ export default function ManageModules(props) {
                           <div className="d-flex justify-content-start flex-column">
                             <span className="ext-dark fw-bolder fs-6">
                               {" "}
-                              {module.titreModule}
+                              {tache.titreTache}
                             </span>
                           </div>
                         </div>
@@ -157,14 +157,14 @@ export default function ManageModules(props) {
                       
                       <td>
                         <span className="text-muted fw-bold text-muted d-block fs-7">
-                          {module.dateDebutModule}
+                          {tache.priorite}
                         </span>
                       </td>
                       <td className="text-end">
                         <div className="d-flex flex-column w-100 me-2">
                           <div className="d-flex flex-stack mb-2">
                             <span className="text-muted me-2 fs-7 fw-bold">
-                              {module.dateFinModule}
+                              {tache.etatTache}
                             </span>
                           </div>
                         </div>
@@ -172,7 +172,7 @@ export default function ManageModules(props) {
                       <td>
                         <div className="d-flex justify-content-end flex-shrink-0">
                           <Link
-                            to={`/gerer-modules/modifier-module/${module.id}`}
+                            to={`/gerer-taches/modifier-tache/${tache.id}`}
                           >
                             <div className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
                               <FontAwesomeIcon icon={faEdit} />
@@ -180,7 +180,7 @@ export default function ManageModules(props) {
                           </Link>
                           <div
                             onClick={(e, id) =>
-                              deleteModule(module.id, module.titreModule)
+                              deleteTache(tache.id, tache.titreTache)
                             }
                             className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                           >
