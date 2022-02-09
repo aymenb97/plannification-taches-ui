@@ -1,0 +1,32 @@
+$modal-animation-duration: 0.3s;
+$animation-duration: 0.4s;
+
+.modal-fadeindown {
+  animation: fadeInDown;
+  animation-duration: $modal-animation-duration;
+}
+.modal-fadeoutup {
+  animation: fadeOutUp;
+  animation-duration: $modal-animation-duration;
+}
+.fadein {
+  animation: fadeIn;
+  animation-duration: $animation-duration;
+}
+.user-circle {
+  height: 50px;
+  width: 50px;
+
+  text-align: center;
+
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 50%;
+}
+.text-user-circle {
+  user-select: none;
+}
+
+.hoverable-element:hover {
+  background-color: #f5f8fa;
+}

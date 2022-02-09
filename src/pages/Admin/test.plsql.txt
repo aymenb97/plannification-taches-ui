@@ -1,0 +1,57 @@
+CREATE OR REPLACE FUNCTION F_CA_C_A(code_client clients.code_client%type, annee varchar(4)) RETURN article.prix%type IS 
+chiffre_affaire article.prix%type
+
+BEGIN
+Select sum(a.prix*c.qte_cde) into chiffre_affaire from
+article a, commande c, detail_cde d where
+a.code_art=d.code_art and c.num_cde=d.num_cde and c.code_client=code_client and to_char(c.date_cde,'YYYY')=annee;
+
+
+END;
+================================
+
+CREATE OR REPALCE PRODCEDURE P_CA_N_C(N IN number,annee IN number) IS
+
+CURSOR c is select code_clt, F_CA_C_A(code_client,annee) as ca from client order by desc;
+BEGIN
+for vc in c
+LOOP
+dbms_output.put_line(vc.code_clt||" "||vc.ca);
+EXIT WHEN c%rowcount=n
+END LOOP;
+END;
+========================================================
+
+CREATE OR REPLACE PROCEDURE P_CD_DATE(p_date DATE) IS
+
+    CURSOR c_cmde IS SELECT num_cde,code_client from commande where 
+    date_cde=to_char(date_cde,'YYYYY')=p_date%rowtype;
+
+    CURSOR detail_cmde(num_cmde number) IS SELECT A.designation,D.code_art,D.qte_cde
+    FROM Article A,detail_cde D WHERE A.code_art= D.code_art 
+    and D.num_cde=num_cmde%rowtype;
+
+    CURSOR detail_liv(num_cmde number) IS SELECT A.designation,A.prix,D.qte_liv
+    FROM Article A, Detail_liv D,Livraision L  WHERE A.code_art= D.code_art and
+    L.num_liv= D.num_liv and L.num_liv=num_cmde%rowtype;
+
+    nb number;
+BEGIN
+    SELECT count(*) INTO nb FROM commandes WHERE  date_cmde=p_date;
+
+    IF nb = 0 THEN
+        dbms_ouput.put_line("Pas de commandes")
+    ELSE
+
+        FOR c in cmde LOOP
+            dbms_output.put_line("num Client "||c.code_client);
+            FOR dc in detail_cmde(c.num_cde) LOOP
+                dbms_output.put_line("Desig: "||dc.designation||"code art: "||dc.code_art||"qte cmde"||dc.qte_cde);
+            ENDLOOP;
+            FOR dv in detail_liv(c.num_cde) LOOP
+                dbms_output.put_line("Article: "||dc.designation||"code art: "||dc.code_art||"qte liv"||dc.qte_cde);
+            ENDLOOP;
+        ENDLOOP;
+        ENDIF
+END
+
