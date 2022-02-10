@@ -2,6 +2,7 @@ import React from "react";
 import { HeaderWrapper } from "../../Components/header/HeaderWrapper";
 import { Toolbar } from "../../Components/toolbar/Toolbar";
 import { useSelector } from "react-redux";
+import { toAbsoluteUrl } from "../../Helpers/AssetHelper";
 export function DashboardLayout(props) {
   const pageTitle = useSelector((state) => state.nav.pageTitle);
   return (
@@ -23,7 +24,12 @@ export function DashboardLayout(props) {
             className="aside-logo bg-danger flex-column-auto text-center"
             id="kt_aside_logo"
           >
-            <h5 className="text-white">LOGO</h5>
+            <img
+              className="text-start-0"
+              width="220px"
+              src={toAbsoluteUrl("/media/logos/logo.svg")}
+              alt=""
+            />
           </div>
           {/* end::Brand */}
 

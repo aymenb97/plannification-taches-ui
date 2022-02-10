@@ -4,26 +4,43 @@ import { instanceToken as axios } from "../../common/axiosWithAuth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import UserMember from "./UserMember";
 import { useSelector } from "react-redux";
+import Fuse from "fuse.js";
 export default function ChatMembers() {
   const userId = useSelector((state) => state.auth.id);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const options = {
+    includeScore: false,
+    keys: ["name", "surname"],
+  };
   useEffect(() => {
     setLoading(true);
     axios
       .get("/users")
       .then((res) => {
-        const tUsers = res.data["hydra:member"].filter(
-          (x) => x.id !== parseInt(userId)
-        );
-
+        const tUsers = res.data["hydra:member"];
         setUsers(tUsers);
+        setAllUsers(tUsers);
         setLoading(false);
       })
       .catch((err) => {
         setLoading(false);
       });
   }, []);
+  const searchUser = (e) => {
+    if (e.target.value.trim() !== "") {
+      const newUsers = [...allUsers];
+      console.log(newUsers);
+      const fuse = new Fuse(newUsers, options);
+      const result = fuse.search(e.target.value);
+      const foundUsers = result.map((i) => i.item);
+      //console.log(foundUsers);
+      setUsers(foundUsers);
+    } else {
+      setUsers([...allUsers]);
+    }
+  };
   return (
     <div className="flex-column flex-lg-row-auto w-100 w-lg-300px w-xl-400px mb-10 mb-lg-0">
       <div className="card card-flush">
@@ -33,6 +50,7 @@ export default function ChatMembers() {
               <FontAwesomeIcon icon={faSearch} size="1x"></FontAwesomeIcon>
             </span>
             <input
+              onChange={(e) => searchUser(e)}
               type="text"
               className="form-control form-control-solid px-15"
               placeholder="Search by name"
@@ -50,14 +68,16 @@ export default function ChatMembers() {
             data-kt-scroll-offset="0px"
             style={{ maxHeight: "181px" }}
           >
-            {users.map((user) => (
-              <UserMember
-                key={user.id}
-                id={user.id}
-                name={user.name + " " + user.surname}
-                email={user.email}
-              />
-            ))}
+            {users.map((user) =>
+              user.id !== parseFloat(userId) ? (
+                <UserMember
+                  key={user.id}
+                  id={user.id}
+                  name={user.name + " " + user.surname}
+                  email={user.email}
+                />
+              ) : null
+            )}
           </div>
         </div>
       </div>

@@ -5,15 +5,15 @@ import { setPageTitle } from "./../../redux";
 import { tacheCircle } from "./TacheCircle";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { wrapper } from 'axios-cookiejar-support';
-import { CookieJar } from 'tough-cookie';
+import { wrapper } from "axios-cookiejar-support";
+import { CookieJar } from "tough-cookie";
 import EditTache from "./EditTache";
 import AddTache from "./AddTache";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faTrash, faEdit ,faOutdent} from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faEdit, faOutdent } from "@fortawesome/free-solid-svg-icons";
 
 export default function ManageTaches(props) {
   const [loading, setLoading] = useState(true);
@@ -37,27 +37,25 @@ export default function ManageTaches(props) {
       .then((res) => {
         console.log("******");
         console.log(res);
-        setTaches(res.data["hydra:member"])
+        setTaches(res.data["hydra:member"]);
         setLoading(false);
       })
       .catch((err) => {
-	      alert(err);
+        alert(err);
         setError(err);
         setLoading(false);
       });
   }, []);
 
-
-
   function deleteTache(id, titre_tache) {
     Swal.fire({
-      title: 'Êtes-vous sûr?',
+      title: "Êtes-vous sûr?",
       text: "Supprimer ce tâche",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Supprimer'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Supprimer",
     }).then((result) => {
       if (result.isConfirmed) {
         axios
@@ -66,17 +64,13 @@ export default function ManageTaches(props) {
             const tachetemp = [...taches];
 
             tachetemp.splice(
-                tachetemp.findIndex((el) => {
+              tachetemp.findIndex((el) => {
                 return el.id === id;
               }),
               1
             );
             setTaches(tachetemp);
-            Swal.fire(
-              'Supprimé!',
-              'Votre tache a été supprimé.',
-              'success'
-            )
+            Swal.fire("Supprimé!", "Votre tache a été supprimé.", "success");
           })
           .catch((err) => {});
       } else if (result.isDenied) {
@@ -84,6 +78,18 @@ export default function ManageTaches(props) {
       }
     });
   }
+  const etatTache = (tache) => {
+    switch (tache) {
+      case "à faire":
+        return <span className="badge badge-light-success">à faire</span>;
+      case "en cours":
+        return <span className="badge badge-light-warning">En cours</span>;
+      case "terminé":
+        return <span className="badge badge-light-primary">Terminée</span>;
+      default:
+        return <div></div>;
+    }
+  };
   return (
     <div className="card fadein">
       {/* begin::Header */}
@@ -154,26 +160,22 @@ export default function ManageTaches(props) {
                           </div>
                         </div>
                       </td>
-                      
+
                       <td>
                         <span className="text-muted fw-bold text-muted d-block fs-7">
                           {tache.priorite}
                         </span>
                       </td>
-                      <td className="text-end">
+                      <td className="text-center">
                         <div className="d-flex flex-column w-100 me-2">
                           <div className="d-flex flex-stack mb-2">
-                            <span className="text-muted me-2 fs-7 fw-bold">
-                              {tache.etatTache}
-                            </span>
+                            {etatTache(tache.etatTache)}
                           </div>
                         </div>
                       </td>
                       <td>
                         <div className="d-flex justify-content-end flex-shrink-0">
-                          <Link
-                            to={`/gerer-taches/modifier-tache/${tache.id}`}
-                          >
+                          <Link to={`/gerer-taches/modifier-tache/${tache.id}`}>
                             <div className="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
                               <FontAwesomeIcon icon={faEdit} />
                             </div>

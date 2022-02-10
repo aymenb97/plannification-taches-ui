@@ -5,15 +5,15 @@ import { setPageTitle } from "./../../redux";
 import { tacheCircle } from "./TacheCircle";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { wrapper } from 'axios-cookiejar-support';
-import { CookieJar } from 'tough-cookie';
+import { wrapper } from "axios-cookiejar-support";
+import { CookieJar } from "tough-cookie";
 import EditModule from "./EditModule";
 import AddModule from "./AddModule";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Moment from 'moment';
-import { faTrash, faEdit ,faOutdent} from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import { faTrash, faEdit, faOutdent } from "@fortawesome/free-solid-svg-icons";
 
 export default function ManageModules(props) {
   const [loading, setLoading] = useState(true);
@@ -31,33 +31,32 @@ export default function ManageModules(props) {
   const [modules, setModules] = useState([]);
   const [error, setError] = useState();
   useEffect(() => {
+    moment.locale("fr");
     dispatch(setPageTitle("Gérer Modules"));
     axios
       .get("/modules")
       .then((res) => {
         console.log("******");
         console.log(res);
-        setModules(res.data["hydra:member"])
+        setModules(res.data["hydra:member"]);
         setLoading(false);
       })
       .catch((err) => {
-	      alert(err);
+        alert(err);
         setError(err);
         setLoading(false);
       });
   }, []);
 
-
-
   function deleteModule(id, titre_tache) {
     Swal.fire({
-      title: 'Êtes-vous sûr?',
+      title: "Êtes-vous sûr?",
       text: "Supprimer ce tâche",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Supprimer'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Supprimer",
     }).then((result) => {
       if (result.isConfirmed) {
         axios
@@ -66,17 +65,13 @@ export default function ManageModules(props) {
             const moduletemp = [...modules];
 
             moduletemp.splice(
-                moduletemp.findIndex((el) => {
+              moduletemp.findIndex((el) => {
                 return el.id === id;
               }),
               1
             );
             setModules(moduletemp);
-            Swal.fire(
-              'Supprimé!',
-              'Votre module a été supprimé.',
-              'success'
-            )
+            Swal.fire("Supprimé!", "Votre module a été supprimé.", "success");
           })
           .catch((err) => {});
       } else if (result.isDenied) {
@@ -148,23 +143,26 @@ export default function ManageModules(props) {
                           <div className="symbol symbol-45px"></div>
                           <div className="d-flex justify-content-start flex-column">
                             <span className="ext-dark fw-bolder fs-6">
-                              {" "}
                               {module.titreModule}
                             </span>
                           </div>
                         </div>
                       </td>
-                      
+
                       <td>
                         <span className="text-muted fw-bold text-muted d-block fs-7">
-                          {module.dateDebutModule}
+                          {moment(module.dateDebutModule).format(
+                            "DD MMMM YYYY"
+                          )}
                         </span>
                       </td>
                       <td className="text-end">
                         <div className="d-flex flex-column w-100 me-2">
                           <div className="d-flex flex-stack mb-2">
                             <span className="text-muted me-2 fs-7 fw-bold">
-                              {module.dateFinModule}
+                              {moment(module.dateFinModule).format(
+                                "DD MMMM YYYY"
+                              )}
                             </span>
                           </div>
                         </div>
