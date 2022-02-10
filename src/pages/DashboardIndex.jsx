@@ -7,6 +7,8 @@ import {
   faListOl,
   faCubes,
 } from "@fortawesome/free-solid-svg-icons";
+import ManageProjects from "./Admin/sections/ManageProjects";
+import EditProject from "./Admin/sections/EditProject";
 import AddUser from "./Admin/sections/AddUser";
 import EditUser from "./Admin/sections/EditUser";
 import AddTache from "./Manager/AddTache";
@@ -27,6 +29,7 @@ import ManageTaches from "./Manager/ManageTaches";
 
 import ManageModules from "./Manager/ManageModules";
 import ManageProjectMonitoring from "./Admin/sections/ManageProjectMonitoring";
+import AddProject from "./Admin/sections/AddProject";
 
 export default function DashboardIndex(props) {
   const roles = useSelector((state) => state.auth.roles);
@@ -54,7 +57,7 @@ export default function DashboardIndex(props) {
               <AsideMenuItem
                 title="Gérer Projets"
                 icon={faCubes}
-                link="gerer-suivi-projet"
+                link="gerer-projets"
               ></AsideMenuItem>
             </>
           ) : null}
@@ -77,20 +80,7 @@ export default function DashboardIndex(props) {
               ></AsideMenuItem>
             </>
           ) : null}
-          {hasRoleMember ? (
-            <>
-              <AsideMenuItem
-                title="Member Tab 1"
-                icon={faUserCog}
-                link="member-tab-1"
-              ></AsideMenuItem>
-              <AsideMenuItem
-                title="Member Tab 2"
-                icon={faUserCog}
-                link="member-tab-1"
-              ></AsideMenuItem>
-            </>
-          ) : null}
+          {hasRoleMember ? <></> : null}
         </>
       }
       content={
@@ -104,6 +94,18 @@ export default function DashboardIndex(props) {
             path="/gerer-suivi-projet"
             component={ManageProjectMonitoring}
           />
+          <Route
+            exact
+            path="/gerer-projets/ajouter-projet"
+            component={AddProject}
+          />
+          <Route
+            exact
+            path="/gerer-projets/modifier-projet/:id"
+            component={EditProject}
+          />
+
+          <Route exact path="/gerer-projets" component={ManageProjects} />
           <Route
             exact
             path="/gerer-utilisateurs/modifier-utilisateur/:id"
