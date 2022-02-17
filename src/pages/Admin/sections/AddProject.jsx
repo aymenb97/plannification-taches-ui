@@ -76,7 +76,7 @@ export default function AddProject(props) {
                   <label className="col-lg-4 col-form-label required fw-bold fs-6">
                     Titre
                   </label>
-                  <div className="col-lg-8">
+                  <div className="col-lg-4">
                     <div className="row">
                       <div className="col-lg-12 fv-row">
                         <Field
@@ -98,7 +98,7 @@ export default function AddProject(props) {
                   <label className="col-lg-4 col-form-label required fw-bold fs-6">
                     Description du projet
                   </label>
-                  <div className="col-lg-8">
+                  <div className="col-lg-4">
                     <div className="row">
                       <div className="col-lg-12 fv-row">
                         <Field
@@ -121,7 +121,7 @@ export default function AddProject(props) {
                   <label className="col-lg-4 col-form-label required fw-bold fs-6">
                     Date début
                   </label>
-                  <div className="col-lg-8">
+                  <div className="col-lg-4">
                     <div className="row">
                       <div className="col-lg-12 fv-row">
                         <Field
@@ -144,7 +144,7 @@ export default function AddProject(props) {
                   <label className="col-lg-4 col-form-label required fw-bold fs-6">
                     Date fin
                   </label>
-                  <div className="col-lg-8">
+                  <div className="col-lg-4">
                     <div className="row">
                       <div className="col-lg-12 fv-row">
                         <Field
@@ -164,28 +164,25 @@ export default function AddProject(props) {
                 </div>
                 <div className="row mb-6">
                   <label className="col-lg-4 col-form-label required fw-bold fs-6">
-                    etat
+                    État
                   </label>
-                  <div className="col-lg-8">
-                    <div className="row">
-                      <div className="col-lg-12 fv-row">
-                        <select
-                          value={values.etat}
-                          name="etat"
-                          onChange={(e, selected) =>
-                            setFieldValue("etat", e.target.value)
-                          }
-                          className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                        >
-                          <option value="non-entamé">non-entamé</option>
-                          <option value="en cours">en cours</option>
-                          <option value="fini">fini</option>
-                        </select>
-                        {errors.etat && touched.etat ? (
-                          <div className="text-danger">{errors.etat}</div>
-                        ) : null}
-                      </div>
-                    </div>
+                  <div className="col-lg-4">
+                    <Field
+                      as="select"
+                      value={values.etat}
+                      name="etat"
+                      onChange={(e, selected) =>
+                        setFieldValue("etat", e.target.value)
+                      }
+                      className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                    >
+                      <option value="0">Non-entamé</option>
+                      <option value="1">En cours</option>
+                      <option value="2">Fini</option>
+                    </Field>
+                    {errors.etat && touched.etat ? (
+                      <div className="text-danger">{errors.etat}</div>
+                    ) : null}
                   </div>
                 </div>
                 <div className="row mb-6">

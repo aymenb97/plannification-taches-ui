@@ -12,7 +12,6 @@ export default function EditProject(props) {
   const dispatch = useDispatch();
   const [users, setUsers] = useState([]);
   const [projets, setProjets] = useState([]);
-
   const [error, setError] = useState();
 
   const onSubmit = (values) => setResult(values);
@@ -22,9 +21,7 @@ export default function EditProject(props) {
       description: Yup.string().required("Ajouter une description"),
       dateDebutProjet: Yup.string().required("Ajouter la date début"),
       dateFinProjet: Yup.string().required("Ajouter la date fin"),
-      chef: Yup.number()
-        .typeError("champ obligatoire")
-        .required("champ obligatoire"),
+      chefDeProjet: Yup.string().required("champ obligatoire"),
     });
   });
   const [validation, setValidation] = useState(validationSchema);
@@ -58,7 +55,7 @@ export default function EditProject(props) {
           ),
           dateFinProjet: Moment(res.data.dateFinProjet).format("YYYY-MM-DD"),
           etat: res.data.etat,
-          chef: parseInt(res.data.chef, 10),
+          chefDeProjet: "/api/users/" + res.data.chefDeProjet.id,
         });
         setLoading(false);
       })
@@ -86,7 +83,7 @@ export default function EditProject(props) {
         <>
           <div className="card-header border-0 cursor-pointer fadein">
             <div className="card-title m-0">
-              <h3 className="fw-bolder m-0">{`Modifier information pour la Projet "${initialValues.titre}"`}</h3>
+              <h3 className="fw-bolder m-0">{`Modifier information pour "${initialValues.titre}"`}</h3>
             </div>
           </div>
           <div id="kt_account_profile_details" className="collapse show fadein">
@@ -148,7 +145,7 @@ export default function EditProject(props) {
 
                     <div className="row mb-6">
                       <label className="col-lg-4 col-form-label required fw-bold fs-6">
-                        Descripion
+                        Description
                       </label>
                       <div className="col-lg-8">
                         <div className="row">
@@ -222,33 +219,51 @@ export default function EditProject(props) {
                         </div>
                       </div>
                     </div>
-
+                    <div className="row mb-6">
+                      <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                        État
+                      </label>
+                      <div className="col-lg-4">
+                        <Field
+                          as="select"
+                          value={values.etat}
+                          name="etat"
+                          className="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                        >
+                          <option value="0">Non-entamé</option>
+                          <option value="1">En cours</option>
+                          <option value="2">Fini</option>
+                        </Field>
+                        {errors.etat && touched.etat ? (
+                          <div className="text-danger">{errors.etat}</div>
+                        ) : null}
+                      </div>
+                    </div>
                     <div className="row mb-6">
                       <label className="col-lg-4 col-form-label required fw-bold fs-6">
                         Chef de projet
                       </label>
                       <div className="col-lg-4">
-                        <div className="col-lg-6 fv-row"></div>
-                        <select
-                          name="values.chef"
-                          value={values.chef}
-                          onChange={(e, selected) =>
-                            setFieldValue("chef", parseInt(e.target.value))
-                          }
-                          class="form-select form-select-solid"
+                        <Field
+                          as="select"
+                          name="chefDeProjet"
+                          value={values.chefDeProjet}
+                          className="form-select form-select-solid"
                           aria-label="Select example"
                         >
                           <option></option>
                           {users.map((user) => (
-                            <option value={user.id}>
+                            <option value={`/api/users/${user.id}`}>
                               {user.name.toUpperCase() +
                                 " " +
                                 user.surname.toUpperCase()}
                             </option>
                           ))}
-                        </select>
-                        {errors.chef && touched.chef ? (
-                          <div className="text-danger">{errors.chef}</div>
+                        </Field>
+                        {errors.chefDeProjet && touched.chefDeProjet ? (
+                          <div className="text-danger">
+                            {errors.chefDeProjet}
+                          </div>
                         ) : null}
                       </div>
                     </div>

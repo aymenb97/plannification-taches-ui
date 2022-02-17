@@ -6,9 +6,12 @@ import {
   faThList,
   faListOl,
   faCubes,
+  faChartArea,
 } from "@fortawesome/free-solid-svg-icons";
 import ManageProjects from "./Admin/sections/ManageProjects";
 import EditProject from "./Admin/sections/EditProject";
+import ViewProjectMonitoring from "./Admin/sections/ViewProjectMonitoring";
+import Stats from "./Admin/sections/Stats";
 import AddUser from "./Admin/sections/AddUser";
 import EditUser from "./Admin/sections/EditUser";
 import AddTache from "./Manager/AddTache";
@@ -54,6 +57,17 @@ export default function DashboardIndex(props) {
                 icon={faUserCog}
                 link="gerer-utilisateurs"
               ></AsideMenuItem>
+
+              <AsideMenuItem
+                title="Gérer Suivi Projets"
+                icon={faListOl}
+                link="suivi-projet"
+              ></AsideMenuItem>
+              <AsideMenuItem
+                title="Statistiques"
+                icon={faChartArea}
+                link="statistiques"
+              ></AsideMenuItem>
               <AsideMenuItem
                 title="Gérer Projets"
                 icon={faCubes}
@@ -63,11 +77,6 @@ export default function DashboardIndex(props) {
           ) : null}
           {hasRoleManager ? (
             <>
-              <AsideMenuItem
-                title="Gérer Suivi Projets"
-                icon={faListOl}
-                link="gerer-suivi-projet"
-              ></AsideMenuItem>
               <AsideMenuItem
                 title="Gérer Taches"
                 icon={faThList}
@@ -91,9 +100,15 @@ export default function DashboardIndex(props) {
 
           <Route
             exact
-            path="/gerer-suivi-projet"
+            path="/suivi-projet"
             component={ManageProjectMonitoring}
           />
+          <Route
+            exact
+            path="/suivi-projet/:id"
+            component={ViewProjectMonitoring}
+          />
+
           <Route
             exact
             path="/gerer-projets/ajouter-projet"
@@ -135,6 +150,11 @@ export default function DashboardIndex(props) {
           />
           <Route
             exact
+            path="/gerer-suivi-projet"
+            component={ManageProjectMonitoring}
+          />
+          <Route
+            exact
             path="/gerer-modules/modifier-module/:id"
             component={EditModule}
           />
@@ -143,6 +163,7 @@ export default function DashboardIndex(props) {
             path="/gerer-utilisateurs/ajouter-utilisateur"
             component={AddUser}
           />
+          <Route exact path="/statistiques" component={Stats} />
           <Route exact path="/mon-profil" component={Profile} />
           <Route path="/chat" component={Chat} />
         </Switch>

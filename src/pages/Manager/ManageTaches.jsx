@@ -4,9 +4,8 @@ import { instanceToken as axios } from "../../common/axiosWithAuth";
 import { setPageTitle } from "./../../redux";
 import { tacheCircle } from "./TacheCircle";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { wrapper } from "axios-cookiejar-support";
-import { CookieJar } from "tough-cookie";
 import EditTache from "./EditTache";
 import AddTache from "./AddTache";
 import Swal from "sweetalert2";
@@ -16,6 +15,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit, faOutdent } from "@fortawesome/free-solid-svg-icons";
 
 export default function ManageTaches(props) {
+  const options = {
+    includeScore: false,
+    keys: ["name", "surname"],
+  };
   const [loading, setLoading] = useState(true);
   const MySwal = withReactContent(
     Swal.mixin({
@@ -29,15 +32,24 @@ export default function ManageTaches(props) {
   );
   const dispatch = useDispatch();
   const [taches, setTaches] = useState([]);
+  const [foundTaches, setFoundTaches] = useState([]);
+  const [projets, setProjets] = useState([]);
   const [error, setError] = useState();
   useEffect(() => {
     dispatch(setPageTitle("Gérer Tâches"));
     axios
-      .get("/taches")
+      .get("/projets")
       .then((res) => {
-        console.log("******");
+        setProjets(res.data["hydra:member"]);
+        return axios({
+          method: "get",
+          url: "taches",
+        });
+      })
+      .then((res) => {
         console.log(res);
         setTaches(res.data["hydra:member"]);
+        setFoundTaches(res.data["hydra:member"]);
         setLoading(false);
       })
       .catch((err) => {
@@ -80,14 +92,25 @@ export default function ManageTaches(props) {
   }
   const etatTache = (tache) => {
     switch (tache) {
-      case "à faire":
+      case "0":
         return <span className="badge badge-light-success">à faire</span>;
-      case "en cours":
+      case "1":
         return <span className="badge badge-light-warning">En cours</span>;
-      case "terminé":
+      case "2":
         return <span className="badge badge-light-primary">Terminée</span>;
       default:
         return <div></div>;
+    }
+  };
+  const filterProject = (e) => {
+    if (e.target.value.trim() !== "") {
+      const newTasks = [...taches];
+      const filteredTasks = newTasks.filter(
+        (x) => parseInt(x.projet.id) === parseInt(e.target.value)
+      );
+      setFoundTaches(filteredTasks);
+    } else {
+      setFoundTaches([...taches]);
     }
   };
   return (
@@ -97,7 +120,7 @@ export default function ManageTaches(props) {
         <h3 className="card-title align-items-start flex-column">
           <span className="card-label fw-bolder fs-3 mb-1">Tâches</span>
           <span className="text-muted mt-1 fw-bold fs-7">
-            {taches.length} Tâches
+            {foundTaches.length} Tâches
           </span>
         </h3>
         <div
@@ -133,6 +156,30 @@ export default function ManageTaches(props) {
           </div>
         ) : (
           <div className="table-responsive m-1 w-100 fadein">
+            <div className="row  mx-0">
+              <div className="col-md-4 mb-5 mx-0">
+                <label className="col-form-label  fw-bold fs-6">
+                  Filtrer par projet
+                </label>
+                <form className="w-100 position-relative m-0">
+                  <span className="svg-icon svg-icon-2 svg-icon-sm svg-icon-gray-500 position-absolute top-50 ms-5 translate-middle-y">
+                    <FontAwesomeIcon
+                      icon={faFilter}
+                      size="1x"
+                    ></FontAwesomeIcon>
+                  </span>
+                  <select
+                    onChange={(e) => filterProject(e)}
+                    className="form-control form-control-solid px-15"
+                  >
+                    <option value="">Tout les projets</option>
+                    {projets.map((x) => (
+                      <option value={x.id}>{x.titre}</option>
+                    ))}
+                  </select>
+                </form>
+              </div>
+            </div>
             <table className="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
               {/* begin::Table head */}
               <thead>
@@ -146,7 +193,7 @@ export default function ManageTaches(props) {
               {/* end::Table head */}
               {/* begin::Table body */}
               <tbody>
-                {taches.map((tache) => {
+                {foundTaches.map((tache) => {
                   return (
                     <tr>
                       <td>

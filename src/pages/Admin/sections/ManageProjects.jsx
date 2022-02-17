@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { instanceToken as axios } from "../../../common/axiosWithAuth";
-
-//import { setPageTitle } from "./../../redux";
 import { setPageTitle } from "../../../redux/navActions";
-//import { projetCircle } from "../../projetCircle";
+import { instanceToken as axios } from "../../../common/axiosWithAuth";
+import Moment from "moment";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -33,7 +31,6 @@ export default function ManageProjets(props) {
     axios
       .get("/projets")
       .then((res) => {
-        console.log("******");
         console.log(res);
         setprojets(res.data["hydra:member"]);
         setLoading(false);
@@ -44,6 +41,18 @@ export default function ManageProjets(props) {
         setLoading(false);
       });
   }, []);
+  const etatProjet = (projet) => {
+    switch (projet) {
+      case "0":
+        return <span className="badge badge-light-danger">Non Entamé</span>;
+      case "1":
+        return <span className="badge badge-light-warning">En cours</span>;
+      case "2":
+        return <span className="badge badge-light-primary">Fini</span>;
+      default:
+        return <div></div>;
+    }
+  };
 
   function deleteProjet(id, titre_projet) {
     Swal.fire({
@@ -143,7 +152,6 @@ export default function ManageProjets(props) {
                           <div className="symbol symbol-45px"></div>
                           <div className="d-flex justify-content-start flex-column">
                             <span className="ext-dark fw-bolder fs-6">
-                              {" "}
                               {projet.titre}
                             </span>
                           </div>
@@ -159,7 +167,9 @@ export default function ManageProjets(props) {
                         <div className="d-flex flex-column w-100 me-2">
                           <div className="d-flex flex-stack mb-2">
                             <span className="text-muted me-2 fs-7 fw-bold">
-                              {projet.dateDebutProjet}
+                              {Moment(projet.dateDebutProjet).format(
+                                "DD MMMM YYYY"
+                              )}
                             </span>
                           </div>
                         </div>
@@ -168,7 +178,9 @@ export default function ManageProjets(props) {
                         <div className="d-flex flex-column w-100 me-2">
                           <div className="d-flex flex-stack mb-2">
                             <span className="text-muted me-2 fs-7 fw-bold">
-                              {projet.dateFinProjet}
+                              {Moment(projet.dateFinProjet).format(
+                                "DD MMMM YYYY"
+                              )}
                             </span>
                           </div>
                         </div>
@@ -177,7 +189,7 @@ export default function ManageProjets(props) {
                         <div className="d-flex flex-column w-100 me-2">
                           <div className="d-flex flex-stack mb-2">
                             <span className="text-muted me-2 fs-7 fw-bold">
-                              {projet.etat}
+                              {etatProjet(projet.etat)}
                             </span>
                           </div>
                         </div>
@@ -186,7 +198,9 @@ export default function ManageProjets(props) {
                         <div className="d-flex flex-column w-100 me-2">
                           <div className="d-flex flex-stack mb-2">
                             <span className="text-muted me-2 fs-7 fw-bold">
-                              {projet.chef}
+                              {projet.chefDeProjet.name +
+                                " " +
+                                projet.chefDeProjet.surname}
                             </span>
                           </div>
                         </div>

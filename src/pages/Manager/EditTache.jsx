@@ -1,4 +1,4 @@
-import { Formik, Form, Field, useFormik } from "formik";
+import { Formik, Form, Field, useFormik, setIn } from "formik";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
@@ -58,8 +58,30 @@ export default function EditTache(props) {
 
   useEffect(() => {
     validateForm();
+
     axios
-      .get(`/taches/${props.match.params.id}`)
+      .get("/users")
+      .then((res) => {
+        setUsers(res.data["hydra:member"]);
+        return axios({
+          method: "get",
+          url: "/modules",
+        });
+      })
+      .then((res) => {
+        setModules(res.data["hydra:member"]);
+        return axios({
+          method: "get",
+          url: "/projets",
+        });
+      })
+      .then((res) => {
+        setProjets(res.data["hydra:member"]);
+        return axios({
+          method: "get",
+          url: `/taches/${props.match.params.id}`,
+        });
+      })
       .then((res) => {
         setInitialValues({
           description: res.data.description,
@@ -69,20 +91,11 @@ export default function EditTache(props) {
           priorite: res.data.priorite,
           tauxAvancement: res.data.tauxAvancement,
           etatTache: res.data.etatTache,
-          membreEquipe: parseInt(res.data.membreEquipe, 10),
-          module: parseInt(res.data.module, 10),
-          projet: parseInt(res.data.projet, 10),
+          membreEquipe: res.data.membreEquipe,
+          module: res.data.module,
+          projet: `/api/projets/${res.data.projet.id}`,
         });
         setLoading(false);
-      })
-      .catch((err) => {
-        alert(err);
-        setLoading(false);
-      });
-    axios
-      .get("/users")
-      .then((res) => {
-        setUsers(res.data["hydra:member"]);
       })
       .catch((err) => {
         setError(err);
@@ -91,14 +104,6 @@ export default function EditTache(props) {
       .get("/modules")
       .then((res) => {
         setModules(res.data["hydra:member"]);
-      })
-      .catch((err) => {
-        console.error(err.response.data); // NOTE - use "error.response.data` (not "error")
-      });
-    axios
-      .get("/projets")
-      .then((res) => {
-        setProjets(res.data["hydra:member"]);
       })
       .catch((err) => {
         console.error(err.response.data); // NOTE - use "error.response.data` (not "error")
@@ -129,7 +134,7 @@ export default function EditTache(props) {
                   .then((res) => {
                     setSubmitting(false);
                     Swal.fire({
-                      position: "top-end",
+                      position: "center-center",
                       icon: "success",
                       title: "Modification effectué avec succes",
                       showConfirmButton: false,
@@ -242,7 +247,30 @@ export default function EditTache(props) {
                         </div>
                       </div>
                     </div>
-
+                    <div className="row mb-6">
+                      <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                        Etat Tache
+                      </label>
+                      <div className="col-lg-8">
+                        <div className="col-lg-6 fv-row">
+                          <Field
+                            as="select"
+                            className="form-select form-select-solid"
+                            name="etatTache"
+                            value={values.etatTache}
+                          >
+                            <option value="0">A faire</option>
+                            <option value="1">En Cours</option>
+                            <option value="2">Terminée</option>
+                          </Field>
+                          {errors.etatTache && touched.etatTache ? (
+                            <div className="text-danger">
+                              {errors.etatTache}
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
                     <div className="row mb-6">
                       <label className="col-lg-4 col-form-label required fw-bold fs-6">
                         Priorité
@@ -351,8 +379,7 @@ export default function EditTache(props) {
                           name="projet"
                           value={values.projet}
                         >
-                          <option value="/api/projets/1">1</option>
-                          <option value="/api/projets/2">2</option>
+                          <option></option>
                           {projets.map((projet) => (
                             <option value={`/api/projets/${projet.id}`}>
                               {projet.titre}

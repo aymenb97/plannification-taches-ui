@@ -89,7 +89,7 @@ export default function AddTache(props) {
             priorite: "",
             description: "",
             tauxAvancement: 0,
-            etatTache: "à faire",
+            etatTache: "0",
             membreEquipe: "",
             module: "",
             projet: "",
@@ -297,8 +297,7 @@ export default function AddTache(props) {
                       name="projet"
                       value={values.projet}
                     >
-                      <option value="/api/projets/1">1</option>
-                      <option value="/api/projets/2">2</option>
+                      <option value=""></option>
                       {projets.map((projet) => (
                         <option value={`/api/projets/${projet.id}`}>
                           {projet.titre}
