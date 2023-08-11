@@ -103,7 +103,7 @@ export default function AddTache(props) {
                 setSubmitting(false);
                 props.history.push("/gerer-taches");
                 Swal.fire({
-                  position: "top-end",
+                  position: "center-center",
                   icon: "success",
                   title: "Ajout effectué avec succes",
                   showConfirmButton: false,

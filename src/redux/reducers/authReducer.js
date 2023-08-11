@@ -4,6 +4,7 @@ import {
   AUTH_FAIL,
   AUTH_LOGOUT,
   CHECK_AUTH_TIMEOUT,
+  AUTH_USER,
 } from "../actionTypes";
 const initialState = {
   id: null,
@@ -21,7 +22,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         error: null,
-        loading: true,
+        loading: false,
       };
     }
     case CHECK_AUTH_TIMEOUT: {
@@ -37,6 +38,12 @@ const authReducer = (state = initialState, action) => {
         loading: false,
         email: action.email,
         error: null,
+      };
+    }
+    case AUTH_USER: {
+      return {
+        ...state,
+        loading: true,
       };
     }
     case AUTH_FAIL: {

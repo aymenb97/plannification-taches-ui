@@ -1,15 +1,17 @@
-import { Formik, Form, Field, useFormik } from "formik";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setPageTitle } from "../../../redux/navActions";
+import { setPageTitle } from "../../redux/navActions";
+import { instanceToken as axios } from "../../common/axiosWithAuth";
 import Moment from "moment";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { instanceToken as axios } from "../../../common/axiosWithAuth";
-export default function ManageProjectMonitoring(props) {
+
+import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+
+export default function ViewProjects(props) {
   const [loading, setLoading] = useState(true);
   const MySwal = withReactContent(
     Swal.mixin({
@@ -24,6 +26,21 @@ export default function ManageProjectMonitoring(props) {
   const dispatch = useDispatch();
   const [projets, setprojets] = useState([]);
   const [error, setError] = useState();
+  useEffect(() => {
+    dispatch(setPageTitle("Gérer Projets"));
+    axios
+      .get("/projets")
+      .then((res) => {
+        console.log(res);
+        setprojets(res.data["hydra:member"]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        alert(err);
+        setError(err);
+        setLoading(false);
+      });
+  }, []);
   const etatProjet = (projet) => {
     switch (projet) {
       case "0":
@@ -36,22 +53,6 @@ export default function ManageProjectMonitoring(props) {
         return <div></div>;
     }
   };
-  useEffect(() => {
-    dispatch(setPageTitle("Gérer Projets"));
-    axios
-      .get("/projets")
-      .then((res) => {
-        console.log("******");
-        console.log(res);
-        setprojets(res.data["hydra:member"]);
-        setLoading(false);
-      })
-      .catch((err) => {
-        alert(err);
-        setError(err);
-        setLoading(false);
-      });
-  }, []);
 
   function deleteProjet(id, titre_projet) {
     Swal.fire({
@@ -94,13 +95,6 @@ export default function ManageProjectMonitoring(props) {
             {projets.length} Projets
           </span>
         </h3>
-        <div
-          className="card-toolbar"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          data-bs-trigger="hover"
-          title="Click to add  project"
-        ></div>
       </div>
       {/* end::Header */}
       {/* begin::Body */}
@@ -123,6 +117,7 @@ export default function ManageProjectMonitoring(props) {
                   <th className="min-w-120px">Date début</th>
                   <th className="min-w-120px">Date fin</th>
                   <th className="min-w-120px">Statut</th>
+                  <th className="min-w-120px">Administrateur</th>
                 </tr>
               </thead>
               {/* end::Table head */}
@@ -133,12 +128,11 @@ export default function ManageProjectMonitoring(props) {
                     <tr>
                       <td>
                         <div className="d-flex align-items-center">
+                          <div className="symbol symbol-45px"></div>
                           <div className="d-flex justify-content-start flex-column">
-                            <Link to={`/suivi-projet/${projet.id}`}>
-                              <span className="text-dark fw-bolder text-hover-primary mb-1 fs-6">
-                                {projet.titre}
-                              </span>
-                            </Link>
+                            <span className="ext-dark fw-bolder fs-6">
+                              {projet.titre}
+                            </span>
                           </div>
                         </div>
                       </td>
@@ -153,7 +147,7 @@ export default function ManageProjectMonitoring(props) {
                           <div className="d-flex flex-stack mb-2">
                             <span className="text-muted me-2 fs-7 fw-bold">
                               {Moment(projet.dateDebutProjet).format(
-                                "DD MMMM YY"
+                                "DD MMMM YYYY"
                               )}
                             </span>
                           </div>
@@ -164,7 +158,7 @@ export default function ManageProjectMonitoring(props) {
                           <div className="d-flex flex-stack mb-2">
                             <span className="text-muted me-2 fs-7 fw-bold">
                               {Moment(projet.dateFinProjet).format(
-                                "DD MMMM YY"
+                                "DD MMMM YYYY"
                               )}
                             </span>
                           </div>
@@ -175,6 +169,15 @@ export default function ManageProjectMonitoring(props) {
                           <div className="d-flex flex-stack mb-2">
                             <span className="text-muted me-2 fs-7 fw-bold">
                               {etatProjet(projet.etat)}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="text-end">
+                        <div className="d-flex flex-column w-100 me-2">
+                          <div className="d-flex flex-stack mb-2">
+                            <span className="text-muted me-2 fs-7 fw-bold">
+                              {projet.admin.name + " " + projet.admin.surname}
                             </span>
                           </div>
                         </div>

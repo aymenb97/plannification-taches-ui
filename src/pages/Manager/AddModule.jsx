@@ -19,14 +19,13 @@ export default function AddModule(props) {
     })
   );
 
-
   const dispatch = useDispatch();
 
   const addMangerSchema = Yup.object().shape({
     titreModule: Yup.string().required("champ obligatoire"),
     dateDebutModule: Yup.string().required("champ obligatoire"),
-    dateFinModule:Yup.string().required("champ obligatoire"),
-    });
+    dateFinModule: Yup.string().required("champ obligatoire"),
+  });
   const [value, setValue] = useState(0);
 
   return (
@@ -40,14 +39,11 @@ export default function AddModule(props) {
         <Formik
           initialValues={{
             titreModule: "",
-            dateDebutModule:"",
-            dateFinModule:"",
+            dateDebutModule: "",
+            dateFinModule: "",
           }}
-          
           validationSchema={addMangerSchema}
-          
-
-          onSubmit={(values, { setSubmitting }) => { 
+          onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
             axios
               .post("/modules", values)
@@ -55,15 +51,15 @@ export default function AddModule(props) {
                 setSubmitting(false);
                 props.history.push("/gerer-modules");
                 Swal.fire({
-                  position: 'top-end',
-                  icon: 'success',
-                  title: 'Ajout effectué avec succes',
+                  position: "center-center",
+                  icon: "success",
+                  title: "Ajout effectué avec succes",
                   showConfirmButton: false,
-                  timer: 1500
+                  timer: 1500,
                 });
               })
               .catch((err) => {
-                console.error(err.response.data); 
+                console.error(err.response.data);
                 setSubmitting(false);
               });
           }}
@@ -93,19 +89,18 @@ export default function AddModule(props) {
                           placeholder="Titre module"
                         />
                         {errors.titreModule && touched.titreModule ? (
-                          <div className="text-danger">{errors.titreModule}</div>
+                          <div className="text-danger">
+                            {errors.titreModule}
+                          </div>
                         ) : null}
                       </div>
-
                     </div>
-
                   </div>
                 </div>
 
-
                 <div className="row mb-6">
                   <label className="col-lg-4 col-form-label required fw-bold fs-6">
-                  Date début module
+                    Date début module
                   </label>
                   <div className="col-lg-8">
                     <div className="row">
@@ -118,7 +113,9 @@ export default function AddModule(props) {
                           value={values.dateDebutModule}
                         />
                         {errors.dateDebutModule && touched.dateDebutModule ? (
-                          <div className="text-danger">{errors.dateDebutModule}</div>
+                          <div className="text-danger">
+                            {errors.dateDebutModule}
+                          </div>
                         ) : null}
                       </div>
                     </div>
@@ -127,7 +124,7 @@ export default function AddModule(props) {
 
                 <div className="row mb-6">
                   <label className="col-lg-4 col-form-label required fw-bold fs-6">
-                  Date fin module
+                    Date fin module
                   </label>
                   <div className="col-lg-8">
                     <div className="row">
@@ -140,7 +137,9 @@ export default function AddModule(props) {
                           value={values.dateFinModule}
                         />
                         {errors.dateFinModule && touched.dateFinModule ? (
-                          <div className="text-danger">{errors.dateFinModule}</div>
+                          <div className="text-danger">
+                            {errors.dateFinModule}
+                          </div>
                         ) : null}
                       </div>
                     </div>

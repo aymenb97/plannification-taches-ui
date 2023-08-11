@@ -2,6 +2,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { instanceToken as axios } from "../../../common/axiosWithAuth";
 import React, { useEffect, useState } from "react";
+import Tag from "../../../Components/Tag";
 
 export default function AddProject(props) {
   const [loading, setLoading] = useState(true);
@@ -10,13 +11,28 @@ export default function AddProject(props) {
     description: Yup.string().required("Ajouter une description"),
     dateDebutProjet: Yup.string().required("Ajouter la date début"),
     dateFinProjet: Yup.string().required("Ajouter la date fin"),
-
-    chef: Yup.number()
-      .typeError("champ obligatoire")
-      .required("champ obligatoire"),
+    membres: Yup.array().min(1, "Ajouter au moins un membre"),
+    chefDeProjet: Yup.string().required("champ obligatoire"),
   });
   const [users, setUsers] = useState([]);
+  const [members, setMembers] = useState([]);
   const [error, setError] = useState();
+  const addMember = (e, setFieldValue) => {
+    const cMembers = [...members];
+    const user = users.find((x) => parseInt(x.id) === parseInt(e.target.value));
+    cMembers.push(user);
+    setFieldValue("membres", cMembers);
+    setMembers(cMembers);
+  };
+  const removeMember = (id, setFieldValue) => {
+    const cMembers = [...members];
+
+    const index = cMembers.findIndex((x) => parseInt(x.id) === parseInt(id));
+    console.log(cMembers, index);
+    cMembers.splice(index, 1);
+    setFieldValue("membres", cMembers);
+    setMembers(cMembers);
+  };
   useEffect(() => {
     axios
       .get("/users")
@@ -26,11 +42,13 @@ export default function AddProject(props) {
       })
 
       .catch((err) => {
-        setError(err);
+        alert(err);
         setLoading(false);
       });
   }, []);
-  return (
+  return loading ? (
+    <div></div>
+  ) : (
     <div className="card mb-5 mb-xl-10 fadein">
       <div className="card-header border-0 cursor-pointer">
         <div className="card-title m-0">
@@ -45,7 +63,8 @@ export default function AddProject(props) {
             dateDebutProjet: "",
             dateFinProjet: "",
             etat: "",
-            chef: "",
+            chefDeProjet: "",
+            membres: [],
           }}
           validationSchema={addProjectSchema}
           onSubmit={(values, { setSubmitting }) => {
@@ -191,15 +210,38 @@ export default function AddProject(props) {
                   </label>
                   <div className="col-lg-4">
                     <div className="col-lg-6 fv-row"></div>
-                    <select
-                      name="values.chef"
-                      value={values.chef}
-                      onChange={(e, selected) =>
-                        setFieldValue("chef", parseInt(e.target.value))
-                      }
+                    <Field
+                      as="select"
+                      name="chefDeProjet"
+                      value={values.chefDeProjet}
                       className="form-select form-select-solid"
                       aria-label="Select example"
                     >
+                      {users.map((user) => (
+                        <option value={`/api/users/${user.id}`}>
+                          {user.name.toUpperCase() +
+                            " " +
+                            user.surname.toUpperCase()}
+                        </option>
+                      ))}
+                    </Field>
+                    {errors.chefDeProjet && touched.chefDeProjet ? (
+                      <div className="text-danger">{errors.chefDeProjet}</div>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="row mb-6">
+                  <label className="col-lg-4 col-form-label required fw-bold fs-6">
+                    Ajouter membre
+                  </label>
+                  <div className="col-lg-4">
+                    <div className="col-lg-6 fv-row"></div>
+                    <select
+                      onChange={(e) => addMember(e, setFieldValue)}
+                      className="form-select form-select-solid"
+                      aria-label="Select example"
+                    >
+                      <option value=""></option>
                       {users.map((user) => (
                         <option value={user.id}>
                           {user.name.toUpperCase() +
@@ -208,12 +250,19 @@ export default function AddProject(props) {
                         </option>
                       ))}
                     </select>
-                    {errors.chef && touched.chef ? (
-                      <div className="text-danger">{errors.chef}</div>
+                    {errors.members && touched.members ? (
+                      <div className="text-danger">{errors.members}</div>
                     ) : null}
+                    <div className="pt-5 w-100">
+                      {members.map((x) => (
+                        <Tag
+                          clicked={() => removeMember(x.id, setFieldValue)}
+                          name={`${x.name} ${x.surname}`}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
-
                 <div className="card-footer d-flex justify-content-end py-6 px-9">
                   <button
                     type="submit"

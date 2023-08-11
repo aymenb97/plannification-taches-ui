@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 
 export default function ManageProjets(props) {

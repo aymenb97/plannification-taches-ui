@@ -20,26 +20,14 @@ export function HeaderWrapper() {
         {/* begin::Logo */}
         {
           <div className="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-            <div to="/dashboard" className="d-lg-none">
-              <img
-                alt="Logo goes here"
-                src={toAbsoluteUrl("/media/logos/logo-2.svg")}
-                className="h-30px"
-              />
-            </div>
+            <div to="/dashboard" className="d-lg-none"></div>
           </div>
         }
         {/* end::Logo */}
 
         {true && (
           <div className="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-            <div to="/" className="d-lg-none">
-              <img
-                alt="Logo"
-                src={toAbsoluteUrl("/media/logos/logo-2.svg")}
-                className="h-30px"
-              />
-            </div>
+            <div to="/" className="d-lg-none"></div>
           </div>
         )}
 

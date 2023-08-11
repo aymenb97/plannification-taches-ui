@@ -129,7 +129,7 @@ export default function Stats(props) {
       </div>
 
       {statTasks.length > 0 ? (
-        <div className="row g-5 g-xl-8">
+        <div className="row g-5 g-xl-8 fadein ">
           <div className="col-xl-4">
             <RadialBar chartColor={"success"} value={[progressRate]} />
           </div>

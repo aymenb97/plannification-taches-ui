@@ -18,6 +18,7 @@ import AddTache from "./Manager/AddTache";
 import EditTache from "./Manager/EditTache";
 import AddModule from "./Manager/AddModule";
 import EditModule from "./Manager/EditModule";
+import ViewProjects from "./Manager/ViewProjects";
 import Profile from "./Common/Profile";
 import Chat from "./Common/Messages/Chat";
 import { useSelector } from "react-redux";
@@ -36,6 +37,7 @@ import AddProject from "./Admin/sections/AddProject";
 
 export default function DashboardIndex(props) {
   const roles = useSelector((state) => state.auth.roles);
+
   let { path, url } = useRouteMatch();
   const [hasRoleAdmin, setHasRoleAdmin] = useState(
     roles.includes("ROLE_ADMIN")
@@ -50,14 +52,13 @@ export default function DashboardIndex(props) {
     <DashboardLayout
       aside={
         <>
-          {hasRoleAdmin ? (
+          {hasRoleAdmin && !hasRoleMember ? (
             <>
               <AsideMenuItem
                 title="Gérer Utilisateurs"
                 icon={faUserCog}
                 link="gerer-utilisateurs"
               ></AsideMenuItem>
-
               <AsideMenuItem
                 title="Gérer Suivi Projets"
                 icon={faListOl}
@@ -68,17 +69,22 @@ export default function DashboardIndex(props) {
                 icon={faChartArea}
                 link="statistiques"
               ></AsideMenuItem>
+            </>
+          ) : null}
+          {hasRoleManager && !hasRoleAdmin ? (
+            <>
+              <AsideMenuItem
+                title="Gérer Suivi Projets"
+                icon={faListOl}
+                link="suivi-projet"
+              ></AsideMenuItem>
               <AsideMenuItem
                 title="Gérer Projets"
                 icon={faCubes}
                 link="gerer-projets"
               ></AsideMenuItem>
-            </>
-          ) : null}
-          {hasRoleManager ? (
-            <>
               <AsideMenuItem
-                title="Gérer Taches"
+                title="Gérer Tâches"
                 icon={faThList}
                 link="gerer-taches"
               ></AsideMenuItem>
@@ -94,78 +100,90 @@ export default function DashboardIndex(props) {
       }
       content={
         <Switch>
-          <Route exact path="/gerer-utilisateurs" component={ManageUsers} />
-          <Route exact path="/gerer-taches" component={ManageTaches} />
-          <Route exact path="/gerer-modules" component={ManageModules} />
-
-          <Route
-            exact
-            path="/suivi-projet"
-            component={ManageProjectMonitoring}
-          />
-          <Route
-            exact
-            path="/suivi-projet/:id"
-            component={ViewProjectMonitoring}
-          />
-
-          <Route
-            exact
-            path="/gerer-projets/ajouter-projet"
-            component={AddProject}
-          />
-          <Route
-            exact
-            path="/gerer-projets/modifier-projet/:id"
-            component={EditProject}
-          />
-
-          <Route exact path="/gerer-projets" component={ManageProjects} />
-          <Route
-            exact
-            path="/gerer-utilisateurs/modifier-utilisateur/:id"
-            component={EditUser}
-          />
-          <Route
-            exact
-            path="/gerer-utilisateurs/ajouter-utilisateur"
-            component={AddUser}
-          />
-
-          <Route
-            exact
-            path="/gerer-taches/ajouter-tache"
-            component={AddTache}
-          />
-          <Route
-            exact
-            path="/gerer-taches/modifier-tache/:id"
-            component={EditTache}
-          />
-
-          <Route
-            exact
-            path="/gerer-modules/ajouter-module"
-            component={AddModule}
-          />
-          <Route
-            exact
-            path="/gerer-suivi-projet"
-            component={ManageProjectMonitoring}
-          />
-          <Route
-            exact
-            path="/gerer-modules/modifier-module/:id"
-            component={EditModule}
-          />
-          <Route
-            exact
-            path="/gerer-utilisateurs/ajouter-utilisateur"
-            component={AddUser}
-          />
-          <Route exact path="/statistiques" component={Stats} />
           <Route exact path="/mon-profil" component={Profile} />
           <Route path="/chat" component={Chat} />
+          {hasRoleAdmin ? (
+            <>
+              <Route exact path="/gerer-utilisateurs" component={ManageUsers} />
+
+              <Route
+                exact
+                path="/gerer-utilisateurs/ajouter-utilisateur"
+                component={AddUser}
+              />
+              <Route exact path="/statistiques" component={Stats} />
+
+              <Route
+                exact
+                path="/gerer-utilisateurs/modifier-utilisateur/:id"
+                component={EditUser}
+              />
+
+              <Route
+                exact
+                path="/suivi-projet"
+                component={ManageProjectMonitoring}
+              />
+              <Route
+                exact
+                path="/suivi-projet/:id"
+                component={ViewProjectMonitoring}
+              />
+            </>
+          ) : null}
+          {hasRoleManager ? (
+            <>
+              <Route
+                exact
+                path="/suivi-projet"
+                component={ManageProjectMonitoring}
+              />
+              <Route
+                exact
+                path="/suivi-projet/:id"
+                component={ViewProjectMonitoring}
+              />
+              <Route
+                exact
+                path="/gerer-suivi-projet"
+                component={ManageProjectMonitoring}
+              />
+              <Route exact path="/gerer-projets" component={ManageProjects} />
+              <Route
+                exact
+                path="/gerer-projets/ajouter-projet"
+                component={AddProject}
+              />
+              <Route
+                exact
+                path="/gerer-projets/modifier-projet/:id"
+                component={EditProject}
+              />
+              <Route exact path="/gerer-taches" component={ManageTaches} />
+              <Route exact path="/gerer-modules" component={ManageModules} />
+              <Route
+                exact
+                path="/gerer-taches/ajouter-tache"
+                component={AddTache}
+              />
+              <Route
+                exact
+                path="/gerer-taches/modifier-tache/:id"
+                component={EditTache}
+              />
+
+              <Route
+                exact
+                path="/gerer-modules/ajouter-module"
+                component={AddModule}
+              />
+              <Route
+                exact
+                path="/gerer-modules/modifier-module/:id"
+                component={EditModule}
+              />
+            </>
+          ) : null}
         </Switch>
       }
     ></DashboardLayout>

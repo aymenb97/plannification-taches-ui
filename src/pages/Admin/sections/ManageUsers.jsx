@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import EditUser from "./EditUser";
 import AddUser from "./AddUser";
 import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
 import withReactContent from "sweetalert2-react-content";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -25,6 +26,7 @@ export default function ManageUsers(props) {
     })
   );
   const dispatch = useDispatch();
+  const id = useSelector((state) => state.auth.id);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState();
   useEffect(() => {
@@ -133,7 +135,7 @@ export default function ManageUsers(props) {
               {/* begin::Table body */}
               <tbody>
                 {users.map((user) => {
-                  return (
+                  return parseInt(user.id) === parseInt(id) ? null : (
                     <tr>
                       <td>
                         <div>

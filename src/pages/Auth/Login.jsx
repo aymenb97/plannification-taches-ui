@@ -150,13 +150,7 @@ export default function Login() {
                   <span className="indicator-label">S'authentifier</span>
                 )}
                 {loading && (
-                  <span
-                    className="indicator-progress"
-                    style={{ display: "block" }}
-                  >
-                    Chargement...
-                    <span className="spinner-border spinner-border-sm align-middle ms-2"></span>
-                  </span>
+                  <span className="spinner-border spinner-border-sm align-middle ms-2"></span>
                 )}
               </button>
             </div>
